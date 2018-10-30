@@ -72,7 +72,7 @@ You can choose from our official docker image or NPM package depending on your
 preference.
 
 ### Docker
-    docker run -p4096:4096 forstalabs/messaging-bot
+    docker run -p4096:4096 forstaapps/live-chat-bot
 
 Or to run a stack using docker-compose that includes redis for storage...
 
