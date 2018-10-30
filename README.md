@@ -79,8 +79,8 @@ Or to run a stack using docker-compose that includes redis for storage...
     docker-compose up
 
 ### NPM
-    npm install -g forsta-messaging-bot
-    messaging-bot
+    npm install -g forsta-live-chat-bot
+    live-chat-bot
 
 
 Developer Install
