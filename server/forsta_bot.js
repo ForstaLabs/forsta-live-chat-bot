@@ -80,6 +80,10 @@ class ForstaBot {
             console.error('Dropping unsupported message:', envelope);
             return;
         }
+        if(msg.data.control === 'readMark') {
+            return;
+        }
+        console.log(msg.data);
 
         const businessInfo = await relay.storage.get('live-chat-bot', 'business-info');
         const questions = await relay.storage.get('live-chat-bot', 'questions');        
@@ -184,7 +188,6 @@ class ForstaBot {
             const forwardMessage = this.getForwardMessage(msg);
             const botTagId = users.filter(u => u.id === this.ourId)[0].tag.id;
             const forwardingDist = await this.resolveTags(`(<${response.tagId}>+<${botTagId}>)`);
-            await this.sendMessage( dist, msg.threadId, businessInfo.forwardMessage);
             
             if(!forwardingDist){
                 await this.sendMessage(dist, msg.threadId, noForwardError);
@@ -231,7 +234,7 @@ class ForstaBot {
                 prompt: prompt, response: responseText 
             });
             return this.threadStatus[msg.threadId].currentQuestion.responses[0];
-        }     
+        }    
 
         const responseNumber = Number(msg.data.action);   
         if(responseNumber > this.threadStatus[msg.threadId].currentQuestion.responses.length - 1 || responseNumber < 0){
