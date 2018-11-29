@@ -83,7 +83,6 @@ class ForstaBot {
         if(msg.data.control === 'readMark') {
             return;
         }
-        console.log(msg.data);
 
         const businessInfo = await relay.storage.get('live-chat-bot', 'business-info');
         const questions = await relay.storage.get('live-chat-bot', 'questions');        
@@ -193,6 +192,8 @@ class ForstaBot {
                 await this.sendMessage(dist, msg.threadId, noForwardError);
                 return;
             }
+
+            await this.sendMessage(dist, msg.threadId, businessInfo.forwardMessage);
 
             let forwardingToDistMsg = await this.sendActionMessage(
                 forwardingDist, 
