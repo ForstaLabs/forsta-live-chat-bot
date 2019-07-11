@@ -1,0 +1,11 @@
+live-chat:
+  image: forstaapps/live-chat-bot
+  ports:
+    - "4096:4096"
+  environment:
+    RELAY_STORAGE_BACKING: postgres
+    DATABASE_URL: postgres://postgres@postgres/postgres
+  links:
+    - postgres
+postgres:
+  image: postgres

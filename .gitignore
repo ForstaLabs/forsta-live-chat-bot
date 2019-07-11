@@ -1,0 +1,12 @@
+node_modules
+dist
+.tx
+*.swp
+.*.build
+.*.pass
+.cscope_db
+*.scssc
+.vscode
+.DS_Store
+*.rdb
+npm-debug.log

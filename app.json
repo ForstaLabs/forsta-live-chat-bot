@@ -1,0 +1,26 @@
+{
+    "name": "Forsta Live Chat",
+    "description": "A Forsta chat bot that facilitates communication with incoming customers.",
+    "repository": "https://github.com/ForstaLabs/live-chat-bot.git",
+    "logo": "https://raw.githubusercontent.com/ForstaLabs/compliance-monitor/master/images/forsta-logo.svg?sanitize=true",
+    "keywords": ["forsta", "messaging", "bot", "live", "chat"],
+    "website": "https://forsta.io",
+    "addons": ["heroku-postgresql"],
+    "env": {
+      "RELAY_STORAGE_BACKING": {
+        "description": "Control where bot settings and data will be stored.  For heroku 'postgresql' is recommended.",
+        "required": false,
+        "value": "postgres"
+      },
+      "HEROKU_FORCE_SSL": {
+        "description": "Require that all communications with the live chat bot be via SSL.",
+        "required": true,
+        "value": "yes"
+      }
+    },
+    "buildpacks": [{
+        "url": "heroku/ruby"
+    }, {
+        "url": "heroku/nodejs"
+    }]
+}
