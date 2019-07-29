@@ -183,12 +183,11 @@ class ForstaBot {
 
         this.threadStatus[msg.threadId].waitingForResponse = false;
 
-        if(response.action === "Forward to Tag") {
+        if (response.action === "Forward to Tag") {
             const forwardMessage = this.getForwardMessage(msg);
             const botTagId = users.filter(u => u.id === this.ourId)[0].tag.id;
-            const forwardingDist = await this.resolveTags(`(<${response.tagId}>+<${botTagId}>)`);
-            
-            if(!forwardingDist){
+            const forwardingDist = await this.resolveTags(`(<${response.actionOption}>+<${botTagId}>)`);
+            if (!forwardingDist) {
                 await this.sendMessage(dist, msg.threadId, noForwardError);
                 return;
             }
