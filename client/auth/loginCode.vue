@@ -40,9 +40,9 @@
 </template>
 
 <script>
-util = require('../util');
-shared = require('../globalState');
-focus = require('vue-focus');
+const util = require('../util');
+const shared = require('../globalState');
+const focus = require('vue-focus');
 
 function setup() {
     if (!this.global.userId) {

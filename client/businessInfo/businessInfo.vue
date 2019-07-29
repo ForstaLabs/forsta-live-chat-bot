@@ -127,6 +127,9 @@ div [class*="pull right"] {
 
 <script>
 'use strict'
+const util = require('../util')
+const shared = require('../globalState')
+
 module.exports = {
     mounted: function() {
         this.loadData();

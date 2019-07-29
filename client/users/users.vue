@@ -55,7 +55,6 @@ div.listgap {
 const util = require('../util');
 const REFRESH_POLL_RATE = 15000;
 
-
 async function addAdmin() {
     this.loading = true;
     let result;
@@ -96,6 +95,7 @@ async function removeAdmin(id) {
     }
 }
 
+const shared = require('../globalState')
 
 module.exports = {
     data: () => ({ 

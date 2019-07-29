@@ -47,9 +47,9 @@
 </template>
 
 <script>
-util = require('../util');
-focus = require('vue-focus');
-shared = require('../globalState');
+const util = require('../util');
+const focus = require('vue-focus');
+const shared = require('../globalState');
 
 function setup() {
     util.fetch.call(this, '/api/onboard/status/v1')

@@ -21,11 +21,11 @@
 </template>
 
 <script>
-shared = require('./globalState');
-util = require('./util');
-topMenu = require('./menu/top.vue');
-bottomMenu = require('./menu/bottom.vue');
-sideMenu = require('./menu/side.vue');
+const shared = require('./globalState');
+const util = require('./util');
+const topMenu = require('./menu/top.vue');
+const bottomMenu = require('./menu/bottom.vue');
+const sideMenu = require('./menu/side.vue');
 
 module.exports = {
     data: () => ({ 

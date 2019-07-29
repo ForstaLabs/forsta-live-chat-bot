@@ -133,7 +133,7 @@ a:hover{
 </template>
 
 <script>
-shared = require('../globalState');
+const shared = require('../globalState');
 
 module.exports = {
     data: () => ({ 

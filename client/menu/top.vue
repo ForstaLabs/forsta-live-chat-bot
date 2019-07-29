@@ -47,7 +47,7 @@ a:hover{
                         <div class="item" @click="questions">
                             <i class="comment alternate outline icon tiny"></i> Questions 
                         </div>
-                        <div class="item" @click="businessInfo">
+                        <div class="item" @click="businessHours">
                             <i class="clock icon tiny"></i> Business Info 
                         </div>
                         <div class="item" @click="messageHistory">
@@ -56,7 +56,7 @@ a:hover{
                         <div class="item" @click="users">
                             <i class="user icon tiny"></i> Users
                         </div>
-                        <div class="item" @click="showingSignOutModal = true">
+                        <div class="item" @click="() => showingSignOutModal = true">
                             Sign Out
                         </div>
                     </div>
@@ -77,12 +77,12 @@ a:hover{
                     <sui-button 
                         class="yellow" 
                         floated="left"
-                        @click="showingSignOutModal = false"
+                        @click="() => showingSignOutModal = false"
                         content="Cancel" />
                     <sui-button 
                         floated="right" 
                         class="green" 
-                        @click="logout()"
+                        @click="logout"
                         content="Sign Out" />
                 </sui-modal-actions>
             </sui-modal>
@@ -91,7 +91,7 @@ a:hover{
 </template>
 
 <script>
-shared = require('../globalState');
+const shared = require('../globalState');
 
 module.exports = {
     data: () => ({ 

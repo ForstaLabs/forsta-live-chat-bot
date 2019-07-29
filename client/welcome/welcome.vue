@@ -37,7 +37,7 @@
 
 <script>
 const util = require('../util');
-shared = require('../globalState');
+const shared = require('../globalState');
 
 module.exports = {
     data: () => ({ 

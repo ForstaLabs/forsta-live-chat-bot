@@ -39,10 +39,10 @@
 </template>
 
 <script>
-util = require('../util');
-focus = require('vue-focus');
-shared = require('../globalState');
-jwtDecode = require('jwt-decode');
+const util = require('../util');
+const focus = require('vue-focus');
+const shared = require('../globalState');
+const jwtDecode = require('jwt-decode');
 
 function setup() {
     const apiToken = this.global.apiToken;
