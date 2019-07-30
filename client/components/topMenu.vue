@@ -95,7 +95,6 @@ const shared = require('../globalState');
 module.exports = {
     data: () => ({ 
         global: shared.state,
-        loggedIn: false,
         showingSignOutModal: false
     }),
     methods: {

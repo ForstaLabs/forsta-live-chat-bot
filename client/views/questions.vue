@@ -297,14 +297,14 @@ module.exports = {
             action: "Forward to Question",
             actionOption: "Question 1",
             tagId: null,
-            color: "#B9D3EE"
+            color: "#ffffff"
           },
           {
             text: "No",
             action: "Forward to Question",
             actionOption: "Question 1",
             tagId: null,
-            color: "#F08080"
+            color: "#ffffff"
           }
         ]
       });
@@ -320,7 +320,7 @@ module.exports = {
         action: "Forward to Question",
         actionOption: `Question ${this.questions.indexOf(question) + 1}`,
         distId: null,
-        color: "#00ff00"
+        color: "#ffffff"
       });
       this.changesMade = true;
     },

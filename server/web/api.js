@@ -288,14 +288,13 @@ class QuestionsAPIV1 extends APIHandler {
                     type: "Multiple Choice",
                     editing: false,
                     hovering: false,
-                    color: '#F08080',
                     responses: [
                         {
                             text: "Yes",
                             action: "Forward to Question",
                             actionOption: "Question 1",
                             distId: null,
-                            color: '#B9D3EE',
+                            color: '#ffffff',
                             editing: false
                         },
                         {
@@ -303,7 +302,7 @@ class QuestionsAPIV1 extends APIHandler {
                             action: "Forward to Question",
                             actionOption: "Question 1",
                             distId: null,
-                            color: '#F08080',
+                            color: '#ffffff',
                             editing: false
                         }
                     ]

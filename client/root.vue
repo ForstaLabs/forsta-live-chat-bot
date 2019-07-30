@@ -34,6 +34,7 @@ module.exports = {
             .then(result => { 
                 this.global.onboardStatus = result.theJson.status;
                 if (this.global.onboardStatus !== 'complete') {
+                    this.global.apiToken = null;
                     this.$router.push({ name: 'welcome' });
                 }
             });
