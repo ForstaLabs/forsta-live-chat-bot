@@ -101,6 +101,7 @@ const _ = require('lodash');
 const moment = require('moment');
 const shared = require('../globalState')
 const util = require('../util')
+
 module.exports = {
     data: () => ({ 
         global: shared.state,

@@ -21,7 +21,6 @@ div [class*="pull right"] {
  
 <template lang="html">
     <div class="ui container left aligned">
-
           <sui-grid 
             style="padding-top:5%;"
             divided="vertically"

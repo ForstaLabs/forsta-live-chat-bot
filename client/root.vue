@@ -1,31 +1,24 @@
 <template>
     <div>
-        <top-menu v-if="$mq=='smallScreen'&&global.apiToken" />
-        <sui-grid v-if="global.apiToken" >
-            <sui-grid-row :columns="2">
-                <sui-grid-column :width="2" v-if="$mq=='bigScreen'" >
-                    <side-menu  />
-                </sui-grid-column>
-                <sui-grid-column 
+        <top-menu v-if="global.apiToken" />
+        <sui-grid>
+            <sui-grid-row :columns="1" centered>
+                <sui-grid-column
                     :width="$mq | mq({
                         smallScreen: 16,
-                        bigScreen: 14})">
+                        bigScreen: 11})">
                     <router-view />
                 </sui-grid-column>
             </sui-grid-row>
         </sui-grid>
-        <router-view v-else />
-
-        
     </div>
 </template>
 
 <script>
 const shared = require('./globalState');
 const util = require('./util');
-const topMenu = require('./menu/top.vue');
-const bottomMenu = require('./menu/bottom.vue');
-const sideMenu = require('./menu/side.vue');
+const topMenu = require('./components/topMenu.vue');
+const sideMenu = require('./components/sideMenu.vue');
 
 module.exports = {
     data: () => ({ 
@@ -52,7 +45,6 @@ module.exports = {
     },
     components: {
         'top-menu': topMenu,
-        'bottom-menu': bottomMenu,
         'side-menu': sideMenu
     },
     computed: {

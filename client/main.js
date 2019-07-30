@@ -15,15 +15,15 @@ function main() {
 
     const Root = require('./root.vue');
     const routes = [
-        { path: '/welcome', name: 'welcome', component: require('./welcome/welcome.vue') },
-        { path: '/auth/tag', name: 'loginTag', component: require('./auth/loginTag.vue') },
-        { path: '/auth/code', name: 'loginCode', component: require('./auth/loginCode.vue') },
-        { path: '/onboard/tag', name: 'onboardTag', component: require('./onboard/onboardTag.vue') },
-        { path: '/onboard/auth/:type/:tag', name: 'onboardAuth', component: require('./onboard/onboardAuth.vue') },
-        { path: '/users', name: 'users', component: require('./users/users.vue') },
-        { path: '/questions', name: 'questions', component: require('./questions/questions.vue') },
-        { path: '/businessInfo', name: 'businessInfo', component: require('./businessInfo/businessInfo.vue') },
-        { path: '/messageHistory', name: 'messageHistory', component: require('./messageHistory/messageHistory.vue') },
+        { path: '/welcome', name: 'welcome', component: require('./views/welcome.vue') },
+        { path: '/auth/tag', name: 'loginTag', component: require('./views/loginTag.vue') },
+        { path: '/auth/code', name: 'loginCode', component: require('./views/loginCode.vue') },
+        { path: '/onboard/tag', name: 'onboardTag', component: require('./views/onboardTag.vue') },
+        { path: '/onboard/auth/:type/:tag', name: 'onboardAuth', component: require('./views/onboardAuth.vue') },
+        { path: '/users', name: 'users', component: require('./views/users.vue') },
+        { path: '/questions', name: 'questions', component: require('./views/questions.vue') },
+        { path: '/businessInfo', name: 'businessInfo', component: require('./views/businessInfo.vue') },
+        { path: '/messageHistory', name: 'messageHistory', component: require('./views/messageHistory.vue') },
         { path: '*', redirect: 'welcome' }
     ];
 
