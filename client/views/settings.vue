@@ -26,65 +26,61 @@ div [class*="pull right"] {
 
 <template lang="html">
     <div class="ui container left aligned">
-        <sui-segment>
+        <sui-segment basic>
             <h2>
                 Bot Settings
             </h2>
             <h4>
-                Current Bot user: {{ global.loginTag }}
+                Current user: @{{ global.loginTag }}
             </h4>
         </sui-segment>
 
-        <sui-segment basic>
+        <sui-segment>
             <h3>
                 In office hours
             </h3>
             <p>When the bot recieves messages outside these hours it 
                 will respond with the message you specify.</p>
+            <sui-grid>
+                <sui-grid-row flex>
+                    <sui-grid-column :width="8">
+                        <span class="label">Open</span>
+                        <sui-input 
+                            format="HH:MM:AM"
+                            v-model="businessInfoData.open"
+                            type="time"
+                            @input="checkForChanges()"/>
+                    </sui-grid-column>
+                    <sui-grid-column :width="8">
+                        <span class="label">Close</span>
+                        <sui-input 
+                            format="HH:MM:AM"
+                            v-model="businessInfoData.close"
+                            type="time"
+                            @input="checkForChanges()"/>   
+                    </sui-grid-column>     
+                    <sui-grid-column :width="16"> 
+                        <span class="label">Message</span>                     
+                        <sui-input 
+                            :style="$mq | mq({
+                                smallScreen: 'width:90%',
+                                bigScreen: 'width:90%'})"
+                            v-model="businessInfoData.outOfOfficeMessage"
+                            @input="checkForChanges()"/>
+                    </sui-grid-column>              
+                </sui-grid-row>
+                <sui-grid-row v-if="changesMade">
+                    <sui-grid-column>
+                        <sui-button 
+                            class="ui button pull right" 
+                            primary
+                            @click="saveData()">
+                            Save Changes
+                        </sui-button>
+                    </sui-grid-column>
+                </sui-grid-row>
+            </sui-grid>
         </sui-segment>
-
-        <sui-divider style="margin-top:5px"/>
-
-        <sui-grid divided="vertically">
-            <sui-grid-row flex>
-                <sui-grid-column :width="8">
-                    <span class="label">Open</span>
-                    <sui-input 
-                        format="HH:MM:AM"
-                        v-model="businessInfoData.open"
-                        type="time"
-                        @input="checkForChanges()"/>
-                </sui-grid-column>
-                <sui-grid-column :width="8">
-                    <span class="label">Close</span>
-                    <sui-input 
-                        format="HH:MM:AM"
-                        v-model="businessInfoData.close"
-                        type="time"
-                        @input="checkForChanges()"/>   
-                </sui-grid-column>     
-                <sui-grid-column :width="16"> 
-                    <span class="label">Message</span>                     
-                    <sui-input 
-                        :style="$mq | mq({
-                            smallScreen: 'width:90%',
-                            bigScreen: 'width:90%'})"
-                        v-model="businessInfoData.outOfOfficeMessage"
-                        @input="checkForChanges()"/>
-                </sui-grid-column>              
-            </sui-grid-row>
-            <sui-grid-row>
-                <sui-grid-column>
-                    <sui-button 
-                        class="ui button pull right" 
-                        primary
-                        v-if="changesMade"
-                        @click="saveData()">
-                        Save Changes
-                    </sui-button>
-                </sui-grid-column>
-            </sui-grid-row>
-        </sui-grid>
 
         <div>
             <sui-modal v-model="showingSaveChangesModal">
