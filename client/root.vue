@@ -6,6 +6,7 @@
                 <sui-grid-column
                     :width="$mq | mq({
                         smallScreen: 16,
+                        mediumScreen: 11,
                         bigScreen: 7})">
                     <router-view />
                 </sui-grid-column>
