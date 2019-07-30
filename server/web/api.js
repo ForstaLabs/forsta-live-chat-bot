@@ -337,7 +337,7 @@ class BusinessInfoAPIV1 extends APIHandler {
             businessInfoData = {
                 open: '08:00',
                 close: '20:00',
-                outOfOfficeMessage: 'This is the default out of office hours message.',
+                outOfOfficeMessage: 'We are out of the office currently.',
                 action: 'Forward to Tag'
             };
             relay.storage.set('live-chat-bot', 'business-info', businessInfoData);
