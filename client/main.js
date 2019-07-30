@@ -22,7 +22,7 @@ function main() {
         { path: '/onboard/auth/:type/:tag', name: 'onboardAuth', component: require('./views/onboardAuth.vue') },
         { path: '/users', name: 'users', component: require('./views/users.vue') },
         { path: '/questions', name: 'questions', component: require('./views/questions.vue') },
-        { path: '/businessInfo', name: 'businessInfo', component: require('./views/businessInfo.vue') },
+        { path: '/settings', name: 'settings', component: require('./views/settings.vue') },
         { path: '/messageHistory', name: 'messageHistory', component: require('./views/messageHistory.vue') },
         { path: '*', redirect: 'welcome' }
     ];

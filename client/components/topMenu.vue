@@ -39,7 +39,6 @@ a:hover{
                 class="header item float right" 
                 style="padding:0px;"
                 v-if="global.apiToken">
-
                 <div class="ui simple dropdown item" style="margin-top:7px">
                     <i class="large user icon"></i>
                     <i class="dropdown icon"></i>
@@ -47,14 +46,14 @@ a:hover{
                         <div class="item" @click="questions">
                             <i class="comment alternate outline icon tiny"></i> Questions 
                         </div>
-                        <div class="item" @click="businessHours">
-                            <i class="clock icon tiny"></i> Business Info 
-                        </div>
                         <div class="item" @click="messageHistory">
                             <i class="archive icon tiny"></i> Message History 
                         </div>
                         <div class="item" @click="users">
                             <i class="user icon tiny"></i> Users
+                        </div>
+                        <div class="item" @click="settings">
+                            <i class="clock icon tiny"></i> Settings 
                         </div>
                         <div class="item" @click="() => showingSignOutModal = true">
                             Sign Out
@@ -109,8 +108,8 @@ module.exports = {
         users: function () {
             this.$router.push({ name: 'users' });
         },
-        businessHours: function () {
-            this.$router.push({ name: 'businessInfo' });
+        settings: function () {
+            this.$router.push({ name: 'settings' });
         },
         messageHistory: function () {
             this.$router.push({ name: 'messageHistory' });

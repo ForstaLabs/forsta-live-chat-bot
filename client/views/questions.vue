@@ -3,34 +3,49 @@ div [class*="pull left"] {
   float: left;
   margin-left: 0.25em;
 }
+
 div [class*="pull right"] {
   float: right;
    margin-right: 0.25em;
 }
+
 .flexbox {
     display: flex;
     flex: 1;
     margin-right:0.5em;
 }
+
 .color-picker input[type="color"] {
     height: 40px;
     width: 70px;
     vertical-align: middle;
 }
+
+.label {
+    color:#555;
+    display: block;
+    margin-bottom:3px;
+    margin-top:5px;
+    font-weight:750
+}
+
+.response-item {
+    padding: 5px 15px 15px 15px;
+    border: 1px #d0d0d0 solid;
+    margin: 15px 0px 15px 0px;
+    border-radius: 5px;
+}
 </style>
  
 <template lang="html">
     <div class="ui container left aligned">
-          <sui-grid 
-            style="padding-top:5%;"
-            divided="vertically"
-            v-for="question in questions">
-            <sui-grid-row 
-                :columns="1">
+        <sui-grid v-for="question in questions">
+            <sui-grid-row
+                :columns="2">
                 <sui-grid-column>
-                    <h2 class="pull left" style="display:inline;vertical-align:middle">
-                        Question {{questions.indexOf(question)+1}}
-                    </h2>
+                    <h2>Question {{questions.indexOf(question)+1}}</h2>
+                </sui-grid-column>
+                <sui-grid-column>
                     <sui-button
                         class="pull right"
                         color="red"
@@ -51,100 +66,83 @@ div [class*="pull right"] {
 
             <sui-grid-row style="padding:0px">
                 <sui-grid-column>
-                    <sui-list relaxed>
-                        <sui-list-item>
-                            <sui-list-content>
-                                <sui-label
-                                    pointing="right"
-                                    color="teal"
-                                    style="vertical-align:middle">Type</sui-label>
-                                <sui-dropdown
-                                    selection
-                                    placeholder="Question Type"
-                                    :options="questionTypes"
-                                    @input="checkForChanges()"
-                                    v-model="question.type" />
-                                <sui-label
-                                    pointing="right"
-                                    color="teal"
-                                    style="vertical-align:middle; margin-left: 10px;">Prompt</sui-label>
-                                <sui-input
-                                    :style="$mq | mq({
-                                        smallScreen: 'width:50%',
-                                        bigScreen: 'width:70%'})"
-                                    v-model="question.prompt"
-                                    :value="question.prompt"
-                                    @input="checkForChanges()"/>
-                            </sui-list-content>
-                        </sui-list-item>
-                    </sui-list>
+                    <span class="label">Prompt</span>
+                    <sui-input
+                        :style="$mq | mq({
+                            smallScreen: 'width:50%',
+                            bigScreen: 'width:70%'})"
+                        v-model="question.prompt"
+                        :value="question.prompt"
+                        @input="checkForChanges()"/>
                 </sui-grid-column>
             </sui-grid-row>
+
+            <sui-grid-row style="padding:0px">
+                <sui-grid-column>
+                    <span class="label">Type</span>
+                    <sui-dropdown
+                        selection
+                        placeholder="Question Type"
+                        :options="questionTypes"
+                        @input="checkForChanges()"
+                        v-model="question.type" />
+                </sui-grid-column>
+            </sui-grid-row>
+
             <sui-grid-row v-if="question.type!=='Free Response'">
                 <sui-grid-column>
-                    <sui-grid 
-                        v-for="response in question.responses">
-                        <sui-grid-row :columns="1">
-                            <sui-grid-column>
-                                <sui-label
-                                    pointing="right"
-                                    color="teal"
-                                    style="vertical-align:middle">Choice</sui-label>
-                                <sui-input
-                                    :style="$mq | mq({
-                                            smallScreen: 'width:40%',
-                                            bigScreen: 'width:30%'})"
-                                    class="flexbox"
-                                    v-model="response.text"
-                                    :value="response.text"
-                                    @input="checkForChanges()"/>                          
-                                <sui-label
-                                    pointing="right"
-                                    color="teal"
-                                    style="vertical-align:middle; margin-left: 10px;">Action</sui-label>
-                                <sui-dropdown      
-                                    selection
-                                    :options="questionActions"
-                                    v-model="response.action"
-                                    @input="updateAction(response)"/>
-                                <sui-icon
-                                    name="arrow right"
-                                    size="large" />
-                                <span v-if="response.action==='Forward to Question'">
-                                    <sui-dropdown   
-                                        selection
-                                        placeholder="Question"
-                                        :options="questionsForDropdown"
-                                        v-model="response.actionOption"
-                                        @input="checkForChanges()"/>
-                                </span>
-                                <span v-if="response.action==='Forward to Tag'">
-                                    <sui-input   
-                                        placeholder="tag"
-                                        :value="response.actionOption"
-                                        v-model="response.actionOption"
-                                        @input="updateTagData(response)"/>
-                                </span>                                
-                                <sui-input
-                                    type="color"
-                                    class="color-picker"
-                                    :value="response.color"
-                                    v-model="response.color"
-                                    @input="checkForChanges()"/>  
-                                <sui-button 
-                                    color="red"
-                                    icon="trash alternate outline"
-                                    style="vertical-align:middle"
-                                    @click="deleteResponse(question, response)" />
-                                <p v-if="response.invalidTag" style="color: #ff0000;">
-                                    The tag "{{response.actionOption}}" does not exist in your organization.
-                                </p>
-                            </sui-grid-column>
-                        </sui-grid-row>
-                    </sui-grid>
+                    <div v-for="response in question.responses" class="response-item">
+                        <span class="label">Choice</span>
+                        <sui-input
+                            style="width:100%"
+                            class="flexbox"
+                            v-model="response.text"
+                            :value="response.text"
+                            @input="checkForChanges()"/>                          
+                        <span class="label">Action</span>
+                        <sui-dropdown      
+                            selection
+                            :options="questionActions"
+                            v-model="response.action"
+                            @input="updateAction(response)"/>
+                        <sui-icon
+                            name="arrow right"
+                            size="large"
+                            style="font-weight:100" />
+                        <span v-if="response.action==='Forward to Question'">
+                            <sui-dropdown   
+                                selection
+                                placeholder="Question"
+                                :options="questionsForDropdown"
+                                v-model="response.actionOption"
+                                @input="checkForChanges()"/>
+                        </span>
+                        <span v-if="response.action==='Forward to Tag'">
+                            <sui-input   
+                                placeholder="tag"
+                                :value="response.actionOption"
+                                v-model="response.actionOption"
+                                @input="updateTagData(response)"/>
+                        </span>                                
+                        <sui-input
+                            type="color"
+                            class="color-picker"
+                            :value="response.color"
+                            v-model="response.color"
+                            @input="checkForChanges()"/>  
+                        <sui-button 
+                            color="red"
+                            class="pull right"
+                            icon="trash alternate outline"
+                            style="vertical-align:middle"
+                            @click="deleteResponse(question, response)" />
+                        <p v-if="response.invalidTag" style="color: #ff0000;">
+                            The tag "{{response.actionOption}}" does not exist in your organization.
+                        </p>
+                    </div>
                 <sui-button
                     style="margin-top:25px"
-                    color="green"
+                    color="blue"
                     content="Add Choice"
                     @click="newResponse(question)"
                     v-if="question.type==='Multiple Choice'"/>
@@ -155,39 +153,30 @@ div [class*="pull right"] {
                 class="left aligned"
                 v-if="question.type==='Free Response'">
                 <sui-grid-column>
-                    <sui-list divided relaxed>
-                        <sui-list-item>
-                            <sui-list-content style="color:#777">                          
-                                <sui-label
-                                    pointing="right"
-                                    color="teal"
-                                    style="vertical-align:middle">Action</sui-label>
-                                <sui-dropdown      
-                                    selection
-                                    :options="questionActions"
-                                    v-model="question.responses[0].action"
-                                    @input="updateAction(question.responses[0].action)"/>
-                                <sui-icon
-                                    name="arrow right"
-                                    size="large" />
-                                <span v-if="question.responses[0].action==='Forward to Question'">
-                                    <sui-dropdown   
-                                        selection
-                                        placeholder="Question"
-                                        :options="questionsForDropdown"
-                                        v-model="question.responses[0].actionOption"
-                                        @input="checkForChanges()"/>
-                                </span>
-                                <span v-if="question.responses[0].action==='Forward to Tag'">
-                                    <sui-input   
-                                        placeholder="tag"
-                                        :value="question.responses[0].actionOption"
-                                        v-model="question.responses[0].actionOption"
-                                        @input="updateTagData(question.responses[0])"/>
-                                </span>
-                            </sui-list-content>
-                        </sui-list-item>
-                    </sui-list>
+                    <span class="label">Action</span>
+                    <sui-dropdown      
+                        selection
+                        :options="questionActions"
+                        v-model="question.responses[0].action"
+                        @input="updateAction(question.responses[0].action)"/>
+                    <sui-icon
+                        name="arrow right"
+                        size="large" />
+                    <span v-if="question.responses[0].action==='Forward to Question'">
+                        <sui-dropdown   
+                            selection
+                            placeholder="Question"
+                            :options="questionsForDropdown"
+                            v-model="question.responses[0].actionOption"
+                            @input="checkForChanges()"/>
+                    </span>
+                    <span v-if="question.responses[0].action==='Forward to Tag'">
+                        <sui-input   
+                            placeholder="tag"
+                            :value="question.responses[0].actionOption"
+                            v-model="question.responses[0].actionOption"
+                            @input="updateTagData(question.responses[0])"/>
+                    </span>
                 </sui-grid-column>
             </sui-grid-row>
         </sui-grid>
@@ -195,7 +184,7 @@ div [class*="pull right"] {
         <div style="margin-bottom:100px">
             <sui-divider />
             <sui-button
-                class="ui large green button pull left"
+                class="ui large blue button pull left"
                 content="New Question"
                 @click="newQuestion()" />
 
@@ -205,7 +194,6 @@ div [class*="pull right"] {
                 @click="saveData()"
                 v-if="changesMade" />
         </div>
-        
 
         <div>
             <sui-modal v-model="showingSaveChangesModal">
@@ -228,13 +216,12 @@ div [class*="pull right"] {
                         content="Don't Save & Continue" />
                     <sui-button 
                         floated="right" 
-                        class="green" 
+                        class="blue" 
                         @click="saveAndContinue()"
                         content="Save & Continue" />
                 </sui-modal-actions>
             </sui-modal>
         </div>
-
     </div>
 </template>
  

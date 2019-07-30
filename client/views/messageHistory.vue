@@ -7,13 +7,13 @@
 <template lang="html">
     <div class="ui container left aligned">
 
-        <div class="ui basic segment" style="padding-top:5%">
+        <div class="ui basic segment">
             <h2 class="ui header">
                 Message History
             </h2>
         </div>
 
-        <sui-dropdown text="Sort By">
+        <sui-dropdown text="Sort By" v-if="messageHistory.length != 0">
             <sui-dropdown-menu>
             <sui-dropdown-item @click="sortByUser(messageHistory, false)">User (A-Z)</sui-dropdown-item>
             <sui-dropdown-item @click="sortByUser(messageHistory, true)">User (Z-A)</sui-dropdown-item>
@@ -36,6 +36,11 @@
                 </sui-table-row>
             </sui-table-header>
             <sui-table-body>
+                <sui-table-row v-if="messageHistory.length == 0">
+                    <sui-table-cell>
+                        0 Threads in Message History
+                    </sui-table-cell>
+                </sui-table-row>
                 <sui-table-row
                     class="hover-grey"
                     @click="selectThread(thread)"
@@ -88,8 +93,14 @@
         </sui-table>
         <!--  /QUESTION EDIT TABLE -->
 
-        <sui-button @click="saveAllThreadsToCSV()">Save All Threads</sui-button>
-        <sui-button @click="saveCurrentThreadToCSV()">Save Current Thread</sui-button>
+        <sui-button
+            v-if="messageHistory.length != 0"
+            color="black"
+            @click="saveAllThreadsToCSV()">Save All Threads</sui-button>
+        <sui-button
+            v-if="selectedThread"
+            color="blue"
+            @click="saveCurrentThreadToCSV()">Save Selected Thread</sui-button>
     </div>
 </template>
 
@@ -141,7 +152,6 @@ module.exports = {
             util.fetch.call(this, '/api/messages/history/v1?' + q)
             .then(result => {
                 this.messageHistory = result.theJson.messages;
-                console.log(this.messageHistory[1]);
                 this.messageHistory.forEach(m => {
                     m.receivedMoment = moment(m.received);
                     m.receivedText = m.receivedMoment.format('llll');

@@ -3,66 +3,60 @@ div [class*="pull left"] {
   float: left;
   margin-left: 0.25em;
 }
+
 div [class*="pull right"] {
   float: right;
    margin-right: 0.25em;
 }
+
 .flexbox {
     display: flex;
     flex: 1;
     margin-right:0.5em;
 }
+
+.label {
+    color:#555;
+    display: block;
+    margin-bottom:3px;
+    margin-top:5px;
+    font-weight:750
+}
 </style>
 
 <template lang="html">
     <div class="ui container left aligned">
-
-        <div class="ui basic segment" style="padding-top:5%">
-            <h2 class="ui header">
-                Distribution Forwarding
+        <sui-segment>
+            <h2>
+                Bot Settings
             </h2>
-        </div>
+            <h4>
+                Current Bot user: {{ global.loginTag }}
+            </h4>
+        </sui-segment>
 
-        <sui-divider style="margin-top:5px"/>
-
-        <sui-grid dividend="vertically">            
-            <sui-grid-row>
-                <sui-grid-column :width="16"> 
-                    <sui-label
-                        color="teal"
-                        pointing="right">Message</sui-label>                     
-                    <sui-input 
-                        :style="$mq | mq({
-                            smallScreen: 'width:90%',
-                            bigScreen: 'width:90%'})"
-                        v-model="businessInfoData.forwardMessage"
-                        @input="checkForChanges()"/>
-                </sui-grid-column>  
-            </sui-grid-row>
-        </sui-grid>
-
-        <div class="ui basic segment" style="padding-top:5%">
-            <h2 class="ui header">
-                After Hours
-            </h2>
-        </div>
+        <sui-segment basic>
+            <h3>
+                In office hours
+            </h3>
+            <p>When the bot recieves messages outside these hours it 
+                will respond with the message you specify.</p>
+        </sui-segment>
 
         <sui-divider style="margin-top:5px"/>
 
         <sui-grid divided="vertically">
-            <sui-grid-row>
-                <sui-grid-column :width="16">
-                    <sui-label 
-                        color="teal"
-                        pointing="right">Open</sui-label>
+            <sui-grid-row flex>
+                <sui-grid-column :width="8">
+                    <span class="label">Open</span>
                     <sui-input 
                         format="HH:MM:AM"
                         v-model="businessInfoData.open"
                         type="time"
                         @input="checkForChanges()"/>
-                    <sui-label
-                        color="teal"
-                        pointing="right">Close</sui-label>
+                </sui-grid-column>
+                <sui-grid-column :width="8">
+                    <span class="label">Close</span>
                     <sui-input 
                         format="HH:MM:AM"
                         v-model="businessInfoData.close"
@@ -70,9 +64,7 @@ div [class*="pull right"] {
                         @input="checkForChanges()"/>   
                 </sui-grid-column>     
                 <sui-grid-column :width="16"> 
-                    <sui-label
-                        color="teal"
-                        pointing="right">Message</sui-label>                     
+                    <span class="label">Message</span>                     
                     <sui-input 
                         :style="$mq | mq({
                             smallScreen: 'width:90%',

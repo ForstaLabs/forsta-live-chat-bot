@@ -58,7 +58,6 @@ function setup() {
         }
     });
 
-
     $('form.ui.form.enter-code').form({
         fields: {
             code: {
