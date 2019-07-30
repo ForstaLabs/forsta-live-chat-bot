@@ -192,7 +192,7 @@ class ForstaBot {
                 return;
             }
 
-            await this.sendMessage(dist, msg.threadId, businessInfo.forwardMessage);
+            await this.sendMessage(dist, msg.threadId, `Forwarding your conversation to ${response.actionOption}`);
 
             let forwardingToDistMsg = await this.sendActionMessage(
                 forwardingDist, 
@@ -219,11 +219,17 @@ class ForstaBot {
 
     getForwardMessage(msg) {
         const responses = this.threadStatus[msg.threadId].responses;
-        let forwardMessage = `A live chat user is trying to get in touch with you. Here are their responses:\n`;
+        let forwardMessage = `A live chat user is trying to connect. Here is their message history:<br><br>`;
         responses.forEach(response => {
-            forwardMessage = `${forwardMessage}\n\n${response.prompt}\n\t${response.response}`;
+            forwardMessage += 
+                `<strong>Prompt:</strong><br>`
+                + `${response.prompt}<br>`
+                + `<strong>Response:</strong><br>`
+                + `${response.response}<br><br>`;
         });
-        return `${forwardMessage}\n\nClick the "Connect" button to chat with this user.`;
+        forwardMessage += `<br /><hr width="100%" />`;
+        forwardMessage += `Click the "Connect" button to chat with this user.`;
+        return forwardMessage;
     }
 
     parseResponse(msg){
