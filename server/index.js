@@ -16,7 +16,8 @@ process.on('unhandledRejection', ev => {
 
 async function run() {
     if (process.env.RELAY_STORAGE_BACKING !== 'postgres') {
-        const msg = 'Live Chat reqires a postgres backing store -- have you set RELAY_STORAGE_BACKING in your environment?';
+        const msg = 'Live Chat reqires a postgres backing store -- \
+            set RELAY_STORAGE_BACKING=postgres and USER=postgres in your environment';
         console.error(msg);
         throw Error(msg);
     }
