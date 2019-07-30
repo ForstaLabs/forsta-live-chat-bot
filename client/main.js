@@ -24,6 +24,7 @@ function main() {
         { path: '/users', name: 'users', component: require('./views/users.vue') },
         { path: '/questions', name: 'questions', component: require('./views/questions.vue') },
         { path: '/settings', name: 'settings', component: require('./views/settings.vue') },
+        { path: '/embed', name: 'embed', component: require('./views/embed.vue') },
         { path: '/messageHistory', name: 'messageHistory', component: require('./views/messageHistory.vue') },
         { path: '*', redirect: 'welcome' }
     ];

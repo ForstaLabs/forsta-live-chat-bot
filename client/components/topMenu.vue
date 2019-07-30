@@ -43,16 +43,19 @@ a:hover{
                     <i class="large user icon"></i>
                     <i class="dropdown icon"></i>
                     <div class="menu left">
-                        <div class="item" @click="questions">
+                        <div class="item" @click="goto('questions')">
                             <i class="comment alternate outline icon tiny"></i> Questions 
                         </div>
-                        <div class="item" @click="messageHistory">
+                        <div class="item" @click="goto('messageHistory')">
                             <i class="archive icon tiny"></i> Message History 
                         </div>
-                        <div class="item" @click="users">
+                        <div class="item" @click="goto('users')">
                             <i class="user icon tiny"></i> Users
                         </div>
-                        <div class="item" @click="settings">
+                        <div class="item" @click="goto('embed')">
+                            <i class="code icon tiny"></i> Embed
+                        </div>
+                        <div class="item" @click="goto('settings')">
                             <i class="clock icon tiny"></i> Settings 
                         </div>
                         <div class="item" @click="() => showingSignOutModal = true">
@@ -98,21 +101,12 @@ module.exports = {
         showingSignOutModal: false
     }),
     methods: {
-        logout: function () {
+        logout () {
             this.global.apiToken = null;
         },
-        questions: function () {
-            this.$router.push({ name: 'questions' });
+        goto (name) {
+            this.$router.push({ name });
         },
-        users: function () {
-            this.$router.push({ name: 'users' });
-        },
-        settings: function () {
-            this.$router.push({ name: 'settings' });
-        },
-        messageHistory: function () {
-            this.$router.push({ name: 'messageHistory' });
-        }
     }
 }
 </script>

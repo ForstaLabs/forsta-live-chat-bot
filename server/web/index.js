@@ -33,6 +33,7 @@ class WebServer {
         this.app.use('/api/questions/', (new api.QuestionsAPIV1({server: this})).router);
         this.app.use('/api/business-info/', (new api.BusinessInfoAPIV1({server: this})).router);
         this.app.use('/api/messages/', (new messagesApi.MessagesAPIv1({server: this})).router);
+        this.app.use('/api/embedSettings/', (new api.EmbedSettingsAPI({server: this})).router);
         this.app.use('/api/tags/', (new api.TagsAPIV1({server: this})).router);
         this.app.use('/static/', express.static(path.join(root, 'static'), {strict: true}));
         
@@ -40,6 +41,7 @@ class WebServer {
             res.setHeader('Content-Type', 'application/javascript');
             res.send(`self.F = self.F || {}; F.env = ${JSON.stringify(jsenv)};\n`);
         });
+        this.app.get('/embed.js', (req, res) => res.sendFile('static/html/embed.js', {root}));
         this.app.get('/*', (req, res) => res.sendFile('static/html/index.html', {root}));
         this.app.use((req, res, next) => {
             res.status(404).json({

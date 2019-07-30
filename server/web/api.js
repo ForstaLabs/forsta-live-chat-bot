@@ -352,6 +352,47 @@ class BusinessInfoAPIV1 extends APIHandler {
 
 }
 
+class EmbedSettingsAPI extends APIHandler {
+
+    constructor(options) {
+        super(options);
+        this.router.get('/*', this.asyncRoute(this.onGet, false));
+        this.router.post('/*', this.asyncRoute(this.onPost, false));
+    }
+
+    async onGet(req, res){
+        let embedSettings = await relay.storage.get('live-chat-bot', 'embed-settings');
+        if (!embedSettings) {
+            embedSettings = {
+                title: "Live Chat",
+                subtitle: "Connect with live support",
+                formText: "Please enter your contact information",
+                headerLogoUrl: "https://app.forsta.io/images/icon_128.png",
+                headerBackgroundColor: "#FFFFFF",
+                headerFontColor: "#000000",
+                buttonText: "Connect",
+                buttonBackgroundColor: "#000000",
+                buttonFontColor: "#FFFFFF",
+                openButtonIconUrl: "https://app.forsta.io/images/icon_128.png",
+                openButtonTooltipText: "Live Chat",
+                openButtonColor: "#FFFFFF",
+                allowCalling: false,
+                token: "",
+                tag: this.server.bot.ourId,
+            };
+        }
+        relay.storage.set('live-chat-bot', 'embed-settings', embedSettings);
+        res.status(200).json(embedSettings);
+    }
+
+    async onPost(req, res) {
+        let embedSettings = req.body.embedSettings;
+        relay.storage.set('live-chat-bot', 'embed-settings', embedSettings);
+        res.status(200);
+    }
+
+}
+
 class TagsAPIV1 extends APIHandler {
 
     constructor(options) {
@@ -372,5 +413,6 @@ module.exports = {
     AuthenticationAPIV1,
     QuestionsAPIV1,
     BusinessInfoAPIV1,
-    TagsAPIV1
+    TagsAPIV1,
+    EmbedSettingsAPI
 };

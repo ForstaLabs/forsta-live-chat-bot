@@ -47,7 +47,7 @@ module.exports = {
     },
     components: {
         'top-menu': topMenu,
-        'side-menu': sideMenu
+        'side-menu': sideMenu,
     },
     computed: {
         globalApiToken: function() { return this.global.apiToken; },
