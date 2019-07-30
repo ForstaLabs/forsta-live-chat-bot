@@ -1,6 +1,14 @@
 <style>
 .hover-grey:hover{
     background-color:#ddd;
+    cursor: pointer;
+}
+
+.label {
+  color: #555;
+  margin-bottom: 3px;
+  margin-top: 5px;
+  font-weight: 750;
 }
 </style>
 
@@ -13,14 +21,14 @@
             </h2>
         </div>
 
-        <sui-dropdown text="Sort By" v-if="messageHistory.length != 0">
+        <!-- <sui-dropdown text="Sort By" v-if="messageHistory.length != 0">
             <sui-dropdown-menu>
-            <sui-dropdown-item @click="sortByUser(messageHistory, false)">User (A-Z)</sui-dropdown-item>
-            <sui-dropdown-item @click="sortByUser(messageHistory, true)">User (Z-A)</sui-dropdown-item>
-            <sui-dropdown-item @click="sortByDate(messageHistory, false)">Date (Newest)</sui-dropdown-item>
-            <sui-dropdown-item @click="sortByDate(messageHistory, true)">Date (Oldest)</sui-dropdown-item>
+            <sui-dropdown-item @click="sortByUser({descending: false})">User (A-Z)</sui-dropdown-item>
+            <sui-dropdown-item @click="sortByUser({descending: true})">User (Z-A)</sui-dropdown-item>
+            <sui-dropdown-item @click="sortByDate({descending: false})">Date (Newest)</sui-dropdown-item>
+            <sui-dropdown-item @click="sortByDate({descending: true})">Date (Oldest)</sui-dropdown-item>
             </sui-dropdown-menu>
-        </sui-dropdown>
+        </sui-dropdown> -->
 
         <!--  QUESTION EDIT TABLE -->
             <sui-table 
@@ -28,10 +36,10 @@
             <sui-table-header>
                 <sui-table-row>
                     <sui-table-header-cell>
-                        User
+                        Sender
                     </sui-table-header-cell>
                     <sui-table-header-cell>
-                        Operator
+                        Reciever
                     </sui-table-header-cell>
                 </sui-table-row>
             </sui-table-header>
@@ -43,7 +51,8 @@
                 </sui-table-row>
                 <sui-table-row
                     class="hover-grey"
-                    @click="selectThread(thread)"
+                    @click="selectMessage(message)"
+                    style="max-height:800px; overflow-x:hidden; overflow-y:scroll"
                     v-for="message in messageHistory">
                     <sui-table-cell v-text="message.recipientLabels[0]"></sui-table-cell>
                     <sui-table-cell v-text="message.recipientLabels[1]"></sui-table-cell>
@@ -51,56 +60,40 @@
             </sui-table-body>
         </sui-table>
 
-        <sui-table 
-            class="ui left aligned table" 
-            v-if="selectedThread">
-            <sui-table-header>
-                <sui-table-row>
-                    <sui-table-header-cell>
-                        Username
-                    </sui-table-header-cell>
-                     <sui-table-header-cell>
-                        Message
-                    </sui-table-header-cell>
-                    <sui-table-header-cell>
-                        Action
-                    </sui-table-header-cell>
-                    <sui-table-header-cell>
-                        Time
-                    </sui-table-header-cell>
-                </sui-table-row>
-            </sui-table-header>
+        <sui-segment v-if="selectedMessage">
+            <div class="label">Thread Id</div>
+            <div>{{selectedMessage.threadId}}</div>
+            
+            <div class="label">Message Id</div>
+            <div>{{selectedMessage.messageId}}</div>
 
-            <sui-table-body 
-                style="height:777px;overflow:auto;">
-                <sui-table-row 
-                    v-for="message in selectedThread.messages">
-                    <sui-table-cell
-                        v-text="message.user.slug">
-                    </sui-table-cell>
-                    <sui-table-cell
-                        v-text="message.message">
-                    </sui-table-cell>
-                    <sui-table-cell
-                        v-text="message.action">
-                    </sui-table-cell>
-                    <sui-table-cell
-                        v-text="message.time">
-                    </sui-table-cell>
-                </sui-table-row>
-            </sui-table-body>
+            <div class="label">Distribution</div>
+            <div>{{selectedMessage.distribution.pretty}}</div>
+            
+            <div class="label">Time Received</div>
+            <div>{{selectedMessage.receivedMoment.format('h:MM:SS MM/DD/YYYY')}}</div>
+            
+            <div class="label">Sender Label</div>
+            <div>{{selectedMessage.senderLabel}}</div>
+            
+            <div class="label">Sender ID</div>
+            <div>{{selectedMessage.senderId}}</div>
 
-        </sui-table>
+            <sui-segment>
+                <div class="label">Payload</div>
+                <div>{{selectedMessage.payload}}</div>
+            </sui-segment>
+        </sui-segment>
         <!--  /QUESTION EDIT TABLE -->
 
-        <sui-button
+        <!-- <sui-button
             v-if="messageHistory.length != 0"
             color="black"
             @click="saveAllThreadsToCSV()">Save All Threads</sui-button>
         <sui-button
             v-if="selectedThread"
             color="blue"
-            @click="saveCurrentThreadToCSV()">Save Selected Thread</sui-button>
+            @click="saveCurrentThreadToCSV()">Save Selected Thread</sui-button> -->
     </div>
 </template>
 
@@ -124,10 +117,10 @@ module.exports = {
         offset: 0,
         ascending: 'no',
         messageHistory: [],
-        selectedThread: null
+        selectedMessage: null
     }),
     computed: {
-        filters: function() {
+        filters () {
             let filts = _.mapValues(this.$route.query, (v, k) => { 
                 return { 
                     value: v, 
@@ -136,22 +129,23 @@ module.exports = {
             });
             return filts;
         },
-        queryString: function() {
+        queryString () {
             let q = Object.keys(this.filters).map(k => `${k}=${this.filters[k].value.split('|')[0]}`);
             return q.join('&').replace("'","");
         }
     },
     watch: {
-        queryString: function(val) {
+        queryString (val) {
             this.getMessages();
         }
     },
     methods: {
-        getMessages: function() {
+        getMessages () {
             const q = this.queryString;
             util.fetch.call(this, '/api/messages/history/v1?' + q)
             .then(result => {
                 this.messageHistory = result.theJson.messages;
+                console.log(this.messageHistory)
                 this.messageHistory.forEach(m => {
                     m.receivedMoment = moment(m.received);
                     m.receivedText = m.receivedMoment.format('llll');
@@ -161,31 +155,25 @@ module.exports = {
                 });
             });
         },
-        sortByDate: function(messageHistory, descending) {
-            let sorted = [];
-            for(let threadId in messageHistory){
-                sorted.push(messageHistory[threadId]);
-            }
+        sortByDate ({ descending }) {
+            let sorted = Array.from(this.messageHistory);
             sorted.sort( (a,b) => {
-                var dateA = moment(a.threadDate, "MM/DD/YYYY");
-                var dateB = moment(b.threadDate, "MM/DD/YYYY");
+                var dateA = a.receivedMoment;
+                var dateB = b.receievedMoment;
                 if (dateA < dateB) {
-                    return descending? 1: -1;
+                    return descending ? 1 : -1;
                 }
                 if (dateA > dateB) {
-                    return descending? -1: 1;
+                    return descending ? -1 : 1;
                 }
             });
             this.messageHistory = sorted;
         },
-        sortByUser: function(messageHistory, descending) {
-            let sorted = [];
-            for(let threadId in messageHistory){
-                sorted.push(messageHistory[threadId]);
-            }
+        sortByUser ({ descending }) {
+            let sorted = Array.from(this.messageHistory);
             sorted.sort( (a,b) =>{
-                var nameA = a.user.slug.toUpperCase();
-                var nameB = b.user.slug.toUpperCase();
+                var nameA = a.senderLabel.toUpperCase();
+                var nameB = b.senderLabel.toUpperCase();
                 if (nameA < nameB) {
                     return descending? 1 : -1;
                 }
@@ -196,40 +184,42 @@ module.exports = {
             });
             this.messageHistory = sorted;
         },
-        saveAllThreadsToCSV: function() {
-            let formattedHistory = [];
-            const threadTableHeader = ['Date Created', 'Time Created', 'User Name', 'User Email'];
-            const messageTableHeader = ['Message', 'Action', 'Time'];
-            this.messageHistory.forEach(thread => {
-                formattedHistory.push(threadTableHeader);
-                formattedHistory.push([thread.threadDate, thread.threadTime, thread.user.slug, thread.user.email]);
-                formattedHistory.push(messageTableHeader);
-                thread.messages.forEach(message => {
-                    formattedHistory.push([message.message, message.action, message.time]);                 
-                });
-            });
-            let csv = csvStringify(formattedHistory, function(err, output){
-                fileSaver.saveAs(new Blob([output]), `MessageHistory-${moment().format('MM/DD/YYYY')}.csv`);
-            });
-        },
-        saveCurrentThreadToCSV: function() {
-            if(!this.selectedThread) return;
-            let formattedHistory = [];
-            let thread = this.selectedThread;
-            const threadTableHeader = ['Date Created', 'Time Created', 'User Name', 'User Email'];
-            const messageTableHeader = ['Message', 'Action', 'Time'];
-            formattedHistory.push(threadTableHeader);
-            formattedHistory.push([thread.threadDate, thread.threadTime, thread.user.slug, thread.user.email]);
-            formattedHistory.push(messageTableHeader);
-            thread.messages.forEach(message => {
-                formattedHistory.push([message.message, message.action, message.time]);                 
-            });
-            let csv = csvStringify(formattedHistory, function(err, output){
-                fileSaver.saveAs(new Blob([output]), `MessageHistory-${moment().format('MM/DD/YYYY')}.csv`);
-            });
-        },
-        selectThread: function(thread) {
-            this.selectedThread = thread;
+        // saveAllThreadsToCSV () {
+        //     let formattedHistory = [];
+        //     const threadTableHeader = ['Date Created', 'Time Created', 'User Name', 'User Email'];
+        //     const messageTableHeader = ['Message', 'Action', 'Time'];
+        //     this.messageHistory.forEach(thread => {
+        //         formattedHistory.push(threadTableHeader);
+        //         formattedHistory.push([thread.threadDate, thread.threadTime, thread.user.slug, thread.user.email]);
+        //         formattedHistory.push(messageTableHeader);
+        //         thread.messages.forEach(message => {
+        //             formattedHistory.push([message.message, message.action, message.time]);                 
+        //         });
+        //     });
+        //     let csv = csvStringify(formattedHistory, function(err, output){
+        //         fileSaver.saveAs(new Blob([output]), `MessageHistory-${moment().format('MM/DD/YYYY')}.csv`);
+        //     });
+        // },
+        // saveCurrentThreadToCSV () {
+        //     if(!this.selectedThread) return;
+        //     let formattedHistory = [];
+        //     let thread = this.selectedThread;
+        //     const threadTableHeader = ['Date Created', 'Time Created', 'User Name', 'User Email'];
+        //     const messageTableHeader = ['Message', 'Action', 'Time'];
+        //     formattedHistory.push(threadTableHeader);
+        //     formattedHistory.push([thread.threadDate, thread.threadTime, thread.user.slug, thread.user.email]);
+        //     formattedHistory.push(messageTableHeader);
+        //     thread.messages.forEach(message => {
+        //         formattedHistory.push([message.message, message.action, message.time]);                 
+        //     });
+        //     let csv = csvStringify(formattedHistory, function(err, output){
+        //         fileSaver.saveAs(new Blob([output]), `MessageHistory-${moment().format('MM/DD/YYYY')}.csv`);
+        //     });
+        // },
+        selectMessage: function(message) {
+            console.log('selecting a message !');
+            console.log(message)
+            this.selectedMessage = message;
         }
     },
     mounted: function() {
