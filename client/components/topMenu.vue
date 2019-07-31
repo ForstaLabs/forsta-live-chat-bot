@@ -40,7 +40,7 @@ a:hover{
                 style="padding:0px;"
                 v-if="global.apiToken">
                 <div class="ui simple dropdown item" style="margin-top:7px">
-                    <i class="large user icon"></i>
+                    <i style="color:white" class="large user icon"></i>
                     <i class="dropdown icon"></i>
                     <div class="menu left">
                         <div class="item" @click="goto('questions')">
