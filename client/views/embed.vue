@@ -12,6 +12,9 @@
       </sui-grid-row>
       <sui-grid-row :columns="2">
         <sui-grid-column>
+          <sui-segment inverted color="blue" v-if="codeCopied">Copied!</sui-segment>
+          <textarea id="codeTextarea" readonly="true" :value="embedCode" class="textarea" />
+          <sui-button color="blue" @click="copyEmbedCode()">Copy</sui-button>
           <div class="label">Ephemeral User Token</div>
           <sui-input
             type="text"
@@ -119,7 +122,6 @@
           <br>
 
           <sui-divider />
-          <textarea readonly="true" :value="embedCode" class="textarea" />
         </sui-grid-column>
         <sui-grid-column>
           <div id="forsta-chat-header" class="mdl-shadow--2dp" :style="getHeaderStyling()">
@@ -203,7 +205,8 @@ module.exports = {
       embedSettings: null,
       embedSettingsOriginal: "",
       showingSaveChangesModal: false,
-      nextRoute: null
+      nextRoute: null,
+      codeCopied: false
     };
   },
   mounted() {
@@ -255,6 +258,13 @@ module.exports = {
     }
   },
   methods: {
+    copyEmbedCode () {
+      document.getElementById("codeTextarea").select();
+      document.execCommand('copy');
+      this.codeCopied = true;
+      setTimeout(() => this.codeCopied = false, 2000);
+      
+    },
     checkForChanges() {
       if (JSON.stringify(this.embedSettings) != this.embedSettingsOriginal) {
         this.changesMade = true;

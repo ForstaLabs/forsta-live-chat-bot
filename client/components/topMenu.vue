@@ -44,7 +44,7 @@ a:hover{
                     <i class="dropdown icon"></i>
                     <div class="menu left">
                         <div class="item" @click="goto('questions')">
-                            <i class="comment alternate outline icon tiny"></i> Questions 
+                            <i class="comment icon tiny"></i> Questions 
                         </div>
                         <div class="item" @click="goto('messageHistory')">
                             <i class="archive icon tiny"></i> Message History 
