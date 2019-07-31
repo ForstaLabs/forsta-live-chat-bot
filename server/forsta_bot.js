@@ -14,7 +14,6 @@ class ForstaBot {
 
     async start() {
         this.ourId = await relay.storage.getState('addr');
-        
         if (!this.ourId) {
             console.warn("bot is not yet registered");
             return;
@@ -23,6 +22,7 @@ class ForstaBot {
         await this.pgStore.initialize();
         this.atlas = await BotAtlasClient.factory();
         this.getUsers = cache.ttl(60, this.atlas.getUsers.bind(this.atlas));
+        this.botUser = (await this.getUsers([this.ourId]))[0];
         this.resolveTags = cache.ttl(60, this.atlas.resolveTags.bind(this.atlas));
         this.msgReceiver = await relay.MessageReceiver.factory();
         this.msgReceiver.addEventListener('keychange', this.onKeyChange.bind(this));

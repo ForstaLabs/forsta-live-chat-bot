@@ -361,6 +361,8 @@ class EmbedSettingsAPI extends APIHandler {
     }
 
     async onGet(req, res){
+        const liveChatBot = this.server.bot.botUser;
+        const tag = `@${liveChatBot.tag.slug}:${liveChatBot.org.slug}`;
         let embedSettings = await relay.storage.get('live-chat-bot', 'embed-settings');
         if (!embedSettings) {
             embedSettings = {
@@ -378,7 +380,7 @@ class EmbedSettingsAPI extends APIHandler {
                 openButtonColor: "#FFFFFF",
                 allowCalling: false,
                 token: "",
-                tag: this.server.bot.ourId,
+                tag
             };
         }
         relay.storage.set('live-chat-bot', 'embed-settings', embedSettings);
