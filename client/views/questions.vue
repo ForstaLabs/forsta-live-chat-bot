@@ -39,7 +39,7 @@ div [class*="pull right"] {
  
 <template lang="html">
     <div class="ui container left aligned">
-        <sui-segment v-for="question in questions" style="background-color:#f7f7f7">
+        <sui-segment v-for="question in questions" style="background-color:#fafafa">
             <sui-grid>
                 <sui-grid-row
                     :columns="2">
@@ -69,12 +69,13 @@ div [class*="pull right"] {
                     <sui-grid-column>
                         <span class="label">Prompt</span>
                         <sui-input
-                            :style="$mq | mq({
-                                smallScreen: 'width:50%',
-                                bigScreen: 'width:70%'})"
-                            v-model="question.prompt"
-                            :value="question.prompt"
-                            @input="checkForChanges()"/>
+                          fluid
+                          :style="$mq | mq({
+                              smallScreen: 'width:50%',
+                              bigScreen: 'width:70%'})"
+                          v-model="question.prompt"
+                          :value="question.prompt"
+                          @input="checkForChanges()"/>
                     </sui-grid-column>
                 </sui-grid-row>
 
@@ -119,11 +120,14 @@ div [class*="pull right"] {
                                     @input="checkForChanges()"/>
                             </span>
                             <span v-if="response.action==='Forward to Tag'">
-                                <sui-input   
-                                    placeholder="tag"
-                                    :value="response.actionOption"
-                                    v-model="response.actionOption"
-                                    @input="updateTagData(response)"/>
+                                <sui-dropdown
+                                  search
+                                  selection
+                                  placeholder="@user.tag"
+                                  :options="tagsForDropdown"   
+                                  :value="response.actionOption"
+                                  v-model="response.actionOption"
+                                  @input="updateTagData(question.responses[0])" />
                             </span>                                
                             <sui-input
                                 type="color"
@@ -137,9 +141,6 @@ div [class*="pull right"] {
                                 icon="trash alternate outline"
                                 style="vertical-align:middle"
                                 @click="deleteResponse(question, response)" />
-                            <sui-segment inverted v-if="response.invalidTag">
-                                The tag "{{response.actionOption}}" does not exist in your organization.
-                            </sui-segment>
                         </div>
                     <sui-button
                         style="margin-top:25px"
@@ -172,11 +173,11 @@ div [class*="pull right"] {
                                 @input="checkForChanges()"/>
                         </span>
                         <span v-if="question.responses[0].action==='Forward to Tag'">
-                            <sui-input   
-                                placeholder="tag"
-                                :value="question.responses[0].actionOption"
-                                v-model="question.responses[0].actionOption"
-                                @input="updateTagData(question.responses[0])"/>
+                            <sui-dropdown
+                              :options="tagsForDropdown"   
+                              :value="question.responses[0].actionOption"
+                              v-model="question.responses[0].actionOption"
+                              @input="updateTagData(question.responses[0])"/>
                         </span>
                     </sui-grid-column>
                 </sui-grid-row>
@@ -194,7 +195,7 @@ div [class*="pull right"] {
                 class="ui large black button pull right"
                 content="Save Changes" 
                 @click="saveData()"
-                v-if="changesMade&&!invalidResponse" />
+                v-if="changesMade" />
         </div>
 
         <div>
@@ -233,7 +234,7 @@ const util = require("../util");
 const shared = require("../globalState");
 
 module.exports = {
-  mounted: function() {
+  mounted() {
     this.loadData();
   },
   methods: {
@@ -243,16 +244,16 @@ module.exports = {
         this.changesMade = true;
       }
     },
-    deleteResponse: function(question, response) {
+    deleteResponse(question, response) {
       question.responses.splice(question.responses.indexOf(response), 1);
       this.changesMade = true;
     },
-    deleteQuestion: function(question) {
+    deleteQuestion(question) {
       this.questions.splice(this.questions.indexOf(question), 1);
       this.questionsForDropdown.splice(this.questions.indexOf(question), 1);
       this.changesMade = true;
     },
-    loadData: function() {
+    loadData() {
       util.fetch
         .call(this, "/api/questions/", { method: "get" })
         .then(result => {
@@ -269,9 +270,12 @@ module.exports = {
 
       util.fetch.call(this, "/api/tags/", { method: "get" }).then(result => {
         this.tags = result.theJson.tags;
+        this.tagsForDropdown = result.theJson.tags.map(t => {
+          return { text: `@${t.slug}`, value: `@${t.slug}` };
+        });
       });
     },
-    moveQuestionDown: function(question) {
+    moveQuestionDown(question) {
       const i = this.questions.indexOf(question);
       if (i >= this.questions.length - 1) return;
       const temp = this.questions[i + 1];
@@ -279,7 +283,7 @@ module.exports = {
       this.questions.splice(i, 1, temp);
       this.checkForChanges();
     },
-    moveQuestionUp: function(question) {
+    moveQuestionUp(question) {
       const i = this.questions.indexOf(question);
       if (i <= 0) return;
       const temp = this.questions[i - 1];
@@ -287,7 +291,7 @@ module.exports = {
       this.questions.splice(i, 1, temp);
       this.checkForChanges();
     },
-    newQuestion: function() {
+    newQuestion() {
       this.questions.push({
         prompt: "Question Prompt",
         type: "Multiple Choice",
@@ -314,7 +318,7 @@ module.exports = {
       });
       this.changesMade = true;
     },
-    newResponse: function(question) {
+    newResponse(question) {
       question.responses.push({
         text: "New Response",
         action: "Forward to Question",
@@ -324,11 +328,11 @@ module.exports = {
       });
       this.changesMade = true;
     },
-    saveAndContinue: function() {
+    saveAndContinue() {
       this.saveData();
       this.nextRoute();
     },
-    saveData: function() {
+    saveData() {
       util.fetch("/api/questions/", {
         method: "post",
         body: { questions: this.questions }
@@ -336,24 +340,22 @@ module.exports = {
       this.changesMade = false;
       this.questionsOriginal = JSON.stringify(this.questions);
     },
-    updateAction: function(response) {
+    updateAction(response) {
       response.actionOption = "";
       if (response.action === "Forward to Question") {
         response.actionOption = "Question 1";
       }
       this.checkForChanges();
     },
-    updateTagData: function(response) {
+    updateTagData(response) {
       const responseTag =
         response.actionOption.charAt(0) == "@"
           ? response.actionOption.slice(1, response.actionOption.length)
           : response.actionOption;
-      const tag = this.tags.find(t => t.slug === responseTag);
-      response.invalidTag = !tag;
-      this.checkForChanges();
+      this.checkForChanges();c
     }
   },
-  beforeRouteLeave: function(to, from, next) {
+  beforeRouteLeave(to, from, next) {
     if (this.changesMade) {
       this.showingSaveChangesModal = true;
       this.nextRoute = next;
@@ -362,17 +364,17 @@ module.exports = {
       next();
     }
   },
-  data: function() {
+  data() {
     return {
       global: shared.state,
       changesMade: false,
       questions: [],
-      invalidResponse: false,
       questionsOriginal: [],
       questionsForDropdown: [],
       showingSaveChangesModal: false,
       nextRoute: null,
       tags: [],
+      tagsForDropdown: [],
       questionActions: [
         {
           text: "Forward to Question",
