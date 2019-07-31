@@ -28,12 +28,12 @@ document.body.appendChild(materialDesignScriptElement);
 
 //GLOBAL STATE
 var flc = {};
-var chatOpen = getCookie("chatOpen") === "true";
+var chatOpen = false;
 var chatOpening = false;
 var chatData = {
-	firstName: getCookie("firstName"),
-	lastName: getCookie("lastName"),
-	email: getCookie("email")
+  firstName: "",
+  lastName: "",
+  email: ""
 };
 
 flc.activate = activate;
@@ -163,8 +163,7 @@ function addDesktopBtnListener() {
         jQuery("#forsta-chat-header").slideToggle("slow", function() {
           jQuery("#forsta-chat-desktop").removeClass("rotated-image");
           chatOpening = false;
-		  chatOpen = !chatOpen;
-		  setCookie("chatOpen", chatOpen, 1);
+          chatOpen = !chatOpen;
         });
       });
     } else {
@@ -173,8 +172,7 @@ function addDesktopBtnListener() {
         jQuery("#forsta-chat").slideToggle("slow", function() {
           jQuery("#forsta-chat-desktop").removeClass("rotated-image");
           chatOpening = false;
-		  chatOpen = !chatOpen;
-		  setCookie("chatOpen", chatOpen, 1);
+          chatOpen = !chatOpen;
         });
       });
     }
@@ -206,36 +204,11 @@ function addFormListener() {
       jQuery("#email-validation-failed-message").hide();
     }
 
-	setCookie("firstName", data.firstName, 1);
-    setCookie("lastName", data.lastName, 1);
-	setCookie("email", data.email, 1);
-	
     jQuery("#forsta-chat").empty();
     jQuery("#forsta-chat").append(getIframe(data));
   });
 }
 
-function getCookie(cname) {
-	var name = cname + "=";
-	var ca = document.cookie.split(";");
-	for (var i = 0; i < ca.length; i++) {
-		var c = ca[i];
-		while (c.charAt(0) == " ") {
-			c = c.substring(1);
-		}
-		if (c.indexOf(name) == 0) {
-			return c.substring(name.length, c.length);
-		}
-	}
-	return "";
-}
-
-function setCookie(cname, cvalue, exdays) {
-	var d = new Date();
-	d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-	var expires = "expires=" + d.toUTCString();
-	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
 function getIframe(data) {
   var iframeSrc = `
 	https://app.forsta.io/@embed?
@@ -354,4 +327,11 @@ function getStyles() {
 			background-color: ${flc.options.buttonBackgroundColor};
 		}
 		`;
+}
+
+function setCookie(cname, cvalue, exdays) {
+	var d = new Date();
+	d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+	var expires = "expires=" + d.toUTCString();
+	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
