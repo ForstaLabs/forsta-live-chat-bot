@@ -364,6 +364,10 @@ class EmbedSettingsAPI extends APIHandler {
         const liveChatBot = this.server.bot.botUser;
         const tag = `@${liveChatBot.tag.slug}:${liveChatBot.org.slug}`;
         const forstaLogoUrl = `http://${req.get('host')}/static/images/forsta-logo.svg`;
+        const op = { method: 'post', body: {} };
+        let token = (await this.server.bot.atlas.fetch('/v1/ephemeral-token/', op)).token;
+        console.log('ephemeral token : ');
+        console.log(token);
         let embedSettings = await relay.storage.get('live-chat-bot', 'embed-settings');
         if (!embedSettings) {
             embedSettings = {
@@ -380,7 +384,7 @@ class EmbedSettingsAPI extends APIHandler {
                 openButtonTooltipText: "Live Chat",
                 openButtonColor: "#FFFFFF",
                 allowCalling: false,
-                token: "",
+                token,
                 tag
             };
         }

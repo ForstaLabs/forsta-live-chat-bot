@@ -16,25 +16,14 @@
                         <div class="field">
                             <label>Forsta {{label}}</label>
                             <div class="ui left icon input">
-                                <input 
-                                    v-focus.lazy="true" 
-                                    :type="inputType" 
-                                    name="secret"
-                                    :placeholder="placeholder" 
-                                    autocomplete="off" 
-                                    v-model='secret'>
+                                <input v-focus.lazy="true" :type="inputType" name="secret" :placeholder="placeholder" autocomplete="off" v-model='secret'>
                                 <i class="lock icon"></i>
                             </div>
                         </div>
                         <div class="field" v-if="type === 'totp'">
                             <label>Authentication Code</label>
                             <div class="ui left icon input">
-                                <input 
-                                    type="number" 
-                                    name="otp" 
-                                    placeholder="authentication code" 
-                                    autocomplete="off" 
-                                    v-model='otp'>
+                                <input type="number" name="otp" placeholder="authentication code" autocomplete="off" v-model='otp'>
                                 <i class="clock icon"></i>
                             </div>
                         </div>
@@ -49,9 +38,9 @@
 </template>
 
 <script>
-const util = require('../util');
-const shared = require('../globalState');
-const focus = require('vue-focus');
+util = require('../util');
+shared = require('../globalState');
+focus = require('vue-focus');
 
 module.exports = {
     data: () => ({
@@ -97,8 +86,9 @@ module.exports = {
                 if (result.ok) {
                     const { token } = result.theJson;
                     this.global.apiToken = token;
+                    this.global.loginTag = 
                     this.global.onboardStatus = 'complete';
-                    this.$router.push({ name: 'welcome' });
+                    this.$router.push({ name: 'questions' });
                     return false;
                 } else {
                     this.error = util.mergeErrors(result.theJson) || 'Internal error, please try again.';

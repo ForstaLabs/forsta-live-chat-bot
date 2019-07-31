@@ -2,16 +2,15 @@ const relay = require("librelay");
 
 class BotAtlasClient extends relay.AtlasClient {
 
-    constructor(){
-        super({});
-    }
-
     async fetch(urn, options){
         return super.fetch(urn, options);
     }
-
     static get onboardingCreatedUser() {
-        return null;
+        return {
+            first_name: "Live",
+            last_name: "Chat",
+            tag_slug: "live.chatbot." + Math.floor(Math.random() * 100)
+        };
     }
 
     static get userAuthTokenDescription() {
@@ -30,12 +29,14 @@ class BotAtlasClient extends relay.AtlasClient {
             try {
                 botUser = await onboardClient.fetch("/v1/user/", {
                     method: "POST",
-                    json: Object.assign({}, this.onboardingCreatedUser, { phone: botUser.phone, email: botUser.email, user_type: "BOT" })                });
+                    json: Object.assign({}, this.onboardingCreatedUser, { phone: botUser.phone, email: botUser.email, user_type: "BOT" })
+                });
                 console.info(
-                    `Created new ${botUser.is_monitor ? "MONITOR" : ""} bot user @${
-                    botUser.tag.slug
-                    }:${botUser.org.slug} <${botUser.id}>`
+                    `Created new bot user @${botUser.tag.slug}:${botUser.org.slug} <${botUser.id}>`
                 );
+                //live chat bot requires admin priveledges to retrieve ephemeral token for embed
+                const op = { method: "PATCH", json: { permissions: [ "org.administrator" ] } };
+                await onboardClient.fetch(`/v1/user/${botUser.id}/`, op);
             } catch (e) {
                 console.error("error during creation of bot user", e);
                 throw e;

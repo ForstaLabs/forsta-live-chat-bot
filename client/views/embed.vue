@@ -120,8 +120,6 @@
             v-model="embedSettings.allowCalling"
             @input="checkForChanges()"/>
           <br>
-
-          <sui-divider />
         </sui-grid-column>
         <sui-grid-column>
           <div id="forsta-chat-header" class="mdl-shadow--2dp" :style="getHeaderStyling()">

@@ -10,8 +10,7 @@
                     Create Catch-All User
                 </h1>
                 This bot will send and receive messages autonomously <br />
-                as a <b>new</b> Forsta user configured to be a "monitor" <br />
-                so it will receive copies of <b>all</b> organization traffic.<br />
+                as a <b>new</b> Forsta user named 'live.chatbot'
                 <br />
                 Please authenticate as an <b>org administrator</b> to create this new user.
             </div>
@@ -47,9 +46,9 @@
 </template>
 
 <script>
-const util = require('../util');
-const focus = require('vue-focus');
-const shared = require('../globalState');
+util = require('../util');
+focus = require('vue-focus');
+shared = require('../globalState');
 
 function setup() {
     util.fetch.call(this, '/api/onboard/status/v1')
@@ -116,6 +115,8 @@ module.exports = {
     },
     mounted: function () {
         setup.call(this)
+    },
+    methods: {
     },
     directives: {
         focus: focus.focus

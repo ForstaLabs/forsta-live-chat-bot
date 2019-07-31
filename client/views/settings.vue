@@ -28,12 +28,9 @@ div [class*="pull right"] {
     <div class="ui container left aligned">
         <sui-segment basic>
             <h2>
-                <img src="http://localhost:4096/images/forsta-logo.svg" />
+                <img src="http://localhost:4096/static/images/forsta-logo.svg" height="50px" width="50px"/>
                 Bot Settings
             </h2>
-            <h4>
-                Current user: @{{ global.loginTag }}
-            </h4>
         </sui-segment>
 
         <sui-segment>
