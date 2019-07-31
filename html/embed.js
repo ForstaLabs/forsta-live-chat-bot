@@ -31,11 +31,10 @@ var flc = {};
 var chatOpen = getCookie("chatOpen") === "true";
 var chatOpening = false;
 var chatData = {
-  firstName: getCookie("firstName"),
-  lastName: getCookie("lastName"),
-  email: getCookie("email")
+	firstName: getCookie("firstName"),
+	lastName: getCookie("lastName"),
+	email: getCookie("email")
 };
-var isMobileDevice = false;
 
 flc.activate = activate;
 flc.initChat = initChat;
@@ -56,10 +55,8 @@ function activate() {
 }
 
 function initChat() {
-	//mobile detection should be done based on headers, not device width
-  // var isMobileDevice = jQuery(window).width() < 992;
-	getDesktopButton();
-	addDesktopBtnListener();
+  getDesktopButton();
+  addDesktopBtnListener();
   addFormListener();
 }
 
@@ -112,6 +109,10 @@ function getDesktopButton() {
 			<label class="mdl-textfield__label" for="sample1">Email</label>
 		</div>
 
+		<div id="email-validation-failed-message">Please enter a valid email.</div>
+
+		<div id="missing-credentials-message">Please enter your first and last name</div>
+
 		<div style="margin-bottom:50px"></div>
 
 		<button 
@@ -124,15 +125,18 @@ function getDesktopButton() {
 `;
 
   jQuery("#forsta-chat-container").append(template);
-
   if (chatOpen && chatData.firstName && chatData.lastName && chatData.email) {
     jQuery("#chat-open").hide();
     jQuery("#forsta-chat").append(getIframe(chatData));
   } else if (chatOpen) {
     jQuery("#chat-open").hide();
-    jQuery("#forsta-chat").append(form);
+	jQuery("#forsta-chat").append(form);
+	jQuery("#email-validation-failed-message").hide();
+	jQuery("#missing-credentials-message").hide();
   } else {
-    jQuery("#forsta-chat").append(form);
+	jQuery("#forsta-chat").append(form);
+	jQuery("#email-validation-failed-message").hide();
+	jQuery("#missing-credentials-message").hide();
     jQuery("#forsta-chat").hide();
     jQuery("#forsta-chat-header").hide();
     jQuery("#chat-close").hide();
@@ -141,7 +145,9 @@ function getDesktopButton() {
 
 function addDesktopBtnListener() {
   jQuery("#forsta-chat-desktop").click(function() {
-		if(chatOpening) return;
+    if (chatOpening) {
+      return;
+    }
     jQuery("#forsta-chat-desktop").addClass("rotated-image");
     if (!chatOpen) {
       jQuery("#chat-open").hide();
@@ -152,23 +158,23 @@ function addDesktopBtnListener() {
     }
 
     if (!chatOpen) {
-			chatOpening = true;
+      chatOpening = true;
       jQuery("#forsta-chat").slideToggle("slow", function() {
         jQuery("#forsta-chat-header").slideToggle("slow", function() {
           jQuery("#forsta-chat-desktop").removeClass("rotated-image");
-					chatOpening = false;
-					chatOpen = !chatOpen;
-          setCookie("chatOpen", chatOpen, 1);
+          chatOpening = false;
+		  chatOpen = !chatOpen;
+		  setCookie("chatOpen", chatOpen, 1);
         });
       });
     } else {
-			chatOpening = true;
+      chatOpening = true;
       jQuery("#forsta-chat-header").slideToggle("slow", function() {
         jQuery("#forsta-chat").slideToggle("slow", function() {
-					jQuery("#forsta-chat-desktop").removeClass("rotated-image");
-					chatOpening = false;
-          chatOpen = !chatOpen;
-          setCookie("chatOpen", chatOpen, 1);
+          jQuery("#forsta-chat-desktop").removeClass("rotated-image");
+          chatOpening = false;
+		  chatOpen = !chatOpen;
+		  setCookie("chatOpen", chatOpen, 1);
         });
       });
     }
@@ -185,76 +191,79 @@ function addFormListener() {
       email: event.target[2].value
     };
 
-    setCookie("firstName", data.firstName, 1);
-    setCookie("lastName", data.lastName, 1);
-    setCookie("email", data.email, 1);
+    if (!data.firstName || !data.lastName) {
+      jQuery("#missing-credentials-message").show();
+      return;
+    } else {
+      jQuery("#missing-credentials-message").hide();
+	}
+	
+	const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
+    if (!emailRegex.test(data.email)) {
+      jQuery("#email-validation-failed-message").show();
+      return;
+    } else {
+      jQuery("#email-validation-failed-message").hide();
+    }
 
+	setCookie("firstName", data.firstName, 1);
+    setCookie("lastName", data.lastName, 1);
+	setCookie("email", data.email, 1);
+	
     jQuery("#forsta-chat").empty();
     jQuery("#forsta-chat").append(getIframe(data));
   });
 }
 
 function getCookie(cname) {
-  var name = cname + "=";
-  var ca = document.cookie.split(";");
-  for (var i = 0; i < ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == " ") {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
+	var name = cname + "=";
+	var ca = document.cookie.split(";");
+	for (var i = 0; i < ca.length; i++) {
+		var c = ca[i];
+		while (c.charAt(0) == " ") {
+			c = c.substring(1);
+		}
+		if (c.indexOf(name) == 0) {
+			return c.substring(name.length, c.length);
+		}
+	}
+	return "";
 }
 
+function setCookie(cname, cvalue, exdays) {
+	var d = new Date();
+	d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+	var expires = "expires=" + d.toUTCString();
+	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
 function getIframe(data) {
-  var iframeSrc = getIframeSource(data);
-  return `<iframe id="forsta-iframe" width="100%" height="100%" src="${iframeSrc}" allow="camera; microphone"></iframe>`;
-}
-
-function getIframeSource(data) {
   var iframeSrc = `
-				https://app.forsta.io/@embed?
-				token=${flc.options.token}&
-				first_name=${data.firstName}&
-				last_name=${data.lastName}&
-				email=${data.email}&
-				to=${flc.options.tag}&
-				title=Live Chat-${data.firstName}%20${data.lastName}
-			`;
-  if (flc.options.allowCalling === "true")
-    iframeSrc = `${iframeSrc}&allowCalling`;
-  if (flc.options.forceScreenShare === "true")
-    iframeSrc = `${iframeSrc}&forceScreenShare`;
-  return iframeSrc;
-}
-
-function getMobileButton() {
-  var mobileSrc = getMobileSrc();
-  var template = `
-		<a class="forsta-open-chat-btn" id="forsta-chat-mobile" href="${mobileSrc}" target="_blank">
-			<img id="chat-open" width="50" src="https://chat.forsta.io/client/logo.png">
-		</a>
-		`;
-  jQuery("#forsta-chat-container").append(template);
-}
-
-function getMobileSrc() {
-  return `
-			https://chat.forsta.io/client/mobile.html?
-			forceScreenShare=${flc.options.forceScreenShare}&
-			colorBackground=${flc.options.backgroundColor}&
-			allowCalling=${flc.options.allowCalling}&
-			colorText=${flc.options.fontColor}&
-			token=${flc.options.token}&
-			tag=${flc.options.tag}
-		`;
+	https://app.forsta.io/@embed?
+	token=${flc.options.token}&
+	first_name=${data.firstName}&
+	last_name=${data.lastName}&
+	email=${data.email}&
+	to=${flc.options.tag}&
+	title=Live Chat-${data.firstName}%20${data.lastName}
+	`;
+	if (flc.options.allowCalling === "true") {
+		iframeSrc = `${iframeSrc}&allowCalling`;
+	}
+	if (flc.options.forceScreenShare === "true") {
+		iframeSrc = `${iframeSrc}&forceScreenShare`;
+	}
+	
+	return `<iframe id="forsta-iframe" width="100%" height="100%" src="${iframeSrc}" allow="camera; microphone"></iframe>`;
 }
 
 function getStyles() {
   return `
+		#email-validation-message {
+			background-color: red;
+			font-weight:1000;
+			border:1px gray solid;
+			border-radius:3px;
+		}
 		#chat-open {
 			margin-top: 17px;
 		} 
@@ -345,11 +354,4 @@ function getStyles() {
 			background-color: ${flc.options.buttonBackgroundColor};
 		}
 		`;
-}
-
-function setCookie(cname, cvalue, exdays) {
-  var d = new Date();
-  d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-  var expires = "expires=" + d.toUTCString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
