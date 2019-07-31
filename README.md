@@ -12,10 +12,10 @@ Quick Start
 
 Install Requirements
 --------
- * [Node.js](https://nodejs.org/en/download/) 8
+ * [Node.js 8](https://nodejs.org/en/download/)
  * [Docker](https://docs.docker.com/v17.12/install/)
  * [Ruby](https://www.ruby-lang.org/en/documentation/installation/)
-   * sass (`gem install sass`)
+ * [Sass](https://sass-lang.com/install)
    
 
 Running Locally
