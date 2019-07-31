@@ -363,19 +363,20 @@ class EmbedSettingsAPI extends APIHandler {
     async onGet(req, res){
         const liveChatBot = this.server.bot.botUser;
         const tag = `@${liveChatBot.tag.slug}:${liveChatBot.org.slug}`;
+        const forstaLogoUrl = `http://${req.get('host')}/static/images/forsta-logo.svg`;
         let embedSettings = await relay.storage.get('live-chat-bot', 'embed-settings');
         if (!embedSettings) {
             embedSettings = {
                 title: "Live Chat",
                 subtitle: "Connect with live support",
                 formText: "Please enter your contact information",
-                headerLogoUrl: "https://app.forsta.io/images/icon_128.png",
+                headerLogoUrl: forstaLogoUrl,
                 headerBackgroundColor: "#FFFFFF",
                 headerFontColor: "#000000",
                 buttonText: "Connect",
                 buttonBackgroundColor: "#000000",
                 buttonFontColor: "#FFFFFF",
-                openButtonIconUrl: "https://app.forsta.io/images/icon_128.png",
+                openButtonIconUrl: forstaLogoUrl,
                 openButtonTooltipText: "Live Chat",
                 openButtonColor: "#FFFFFF",
                 allowCalling: false,

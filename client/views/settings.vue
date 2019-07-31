@@ -28,6 +28,7 @@ div [class*="pull right"] {
     <div class="ui container left aligned">
         <sui-segment basic>
             <h2>
+                <img src="http://localhost:4096/images/forsta-logo.svg" />
                 Bot Settings
             </h2>
             <h4>
