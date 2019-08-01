@@ -14,15 +14,7 @@
         <sui-grid-column>
           <sui-segment inverted color="blue" v-if="codeCopied">Copied!</sui-segment>
           <textarea id="codeTextarea" readonly="true" :value="embedCode" class="textarea" />
-          <sui-button color="blue" @click="copyEmbedCode()">Copy</sui-button>
-          <div class="label">Ephemeral User Token</div>
-          <sui-input
-            type="text"
-            style="width:100%"
-            v-model="embedSettings.token"
-            :value="embedSettings.token"
-            @input="checkForChanges()"
-          />
+          <sui-button style="width:100%" color="blue" @click="copyEmbedCode()">Copy</sui-button>
 
           <div class="label">Title</div>
           <sui-input
@@ -56,22 +48,31 @@
             @input="checkForChanges()"
           />
 
-          <div class="label">Header BG Color</div>
-          <sui-input
-            type="color"
-            class="color-picker"
-            v-model="embedSettings.headerBackgroundColor"
-            :value="embedSettings.headerBackgroundColor"
-            @input="checkForChanges()"
-          />
-          <div class="label">Header Font Color</div>
-          <sui-input
-            type="color"
-            class="color-picker"
-            v-model="embedSettings.headerFontColor"
-            :value="embedSettings.headerFontColor"
-            @input="checkForChanges()"
-          />
+          <table>
+            <tr>
+              <td>
+                <div class="label">Header BG Color</div>
+                <sui-input
+                  style="display:inline !important"
+                  type="color"
+                  class="color-picker"
+                  v-model="embedSettings.headerBackgroundColor"
+                  :value="embedSettings.headerBackgroundColor"
+                  @input="checkForChanges()"
+                />
+              </td>
+              <td style="padding-left:20px">
+                <div class="label">Header Font Color</div>
+                <sui-input
+                  type="color"
+                  class="color-picker"
+                  v-model="embedSettings.headerFontColor"
+                  :value="embedSettings.headerFontColor"
+                  @input="checkForChanges()"
+                />
+              </td>
+            </tr>
+          </table>
 
           <div class="label">Button Text</div>
           <sui-input
@@ -79,22 +80,32 @@
             v-model="embedSettings.buttonText"
             @input="checkForChanges()"
           />
-          <div class="label">Button Color</div>
-          <sui-input
-            type="color"
-            class="color-picker"
-            :value="embedSettings.buttonBackgroundColor"
-            v-model="embedSettings.buttonBackgroundColor"
-            @input="checkForChanges()"
-          />
-          <div class="label">Button Font Color</div>
-          <sui-input
-            type="color"
-            class="color-picker"
-            v-model="embedSettings.buttonFontColor"
-            :value="embedSettings.buttonFontColor"
-            @input="checkForChanges()"/>
 
+          <table>
+            <tr>
+              <td>
+                <div class="label">Button Color</div>
+                <sui-input
+                  type="color"
+                  class="color-picker"
+                  :value="embedSettings.buttonBackgroundColor"
+                  v-model="embedSettings.buttonBackgroundColor"
+                  @input="checkForChanges()"
+                />
+              </td>
+              <td style="padding-left:45px">
+                <div class="label">Button Font Color</div>
+                <sui-input
+                  type="color"
+                  class="color-picker"
+                  v-model="embedSettings.buttonFontColor"
+                  :value="embedSettings.buttonFontColor"
+                  @input="checkForChanges()"/>
+              </td>
+            </tr>
+          </table>
+
+          
           <div class="label">Open Button Icon URL</div>
           <sui-input
             style="width:100%"
@@ -327,11 +338,11 @@ module.exports = {
 
 <style>
 .textarea {
-  padding:2px;
-  border-radius:3px;
+  padding: 5px;
+  border-radius: 6px;
   border: 1px #ddd solid;
   width: 100%;
-  min-height: 200px;
+  min-height: 250px;
   font-family: monospace;
 }
 div [class*="pull left"] {
@@ -358,7 +369,6 @@ div [class*="pull right"] {
 
 .label {
   color: #555;
-  display: block;
   margin-bottom: 3px;
   margin-top: 5px;
   font-weight: 750;
