@@ -1,9 +1,11 @@
 Forsta Live Chat Bot
 ========
-This repository is built from a Forsta end-to-end-encrypted messaging bot template.
-The Forsta messaging-bot allows for for autonomous receipt, processing, storage, and/or 
+This repository is built from Forsta's [end-to-end-encrypted messaging bot template](https://github.com/ForstaLabs/messaging-bot).
+The Forsta messaging-bot provides for for autonomous receipt, processing, storage, and
 transmission of messaging data in conjunction with the Forsta web messenger and iPhone/Android apps.
 Please fork it or one of our several projects based off of it!
+
+
 
 Quick Start
 --------
