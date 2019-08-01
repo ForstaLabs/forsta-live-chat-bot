@@ -238,7 +238,8 @@ module.exports = {
         openButtonColor,
         allowCalling,
         token,
-        tag
+        tag,
+        host
       } = this.embedSettings;
       return `<script type="text/javascript" src="${window.location.origin}/embed.js"><\/script>
 <script type="text/javascript">
@@ -260,6 +261,7 @@ module.exports = {
       forceScreenShare: "false",
       token: "${token}",
       tag: "${tag}",
+      host: "${host}"
     };
     flc.activate();
   }

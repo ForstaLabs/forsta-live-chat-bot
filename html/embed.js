@@ -61,7 +61,20 @@ function initChat() {
 }
 
 function getDesktopButton() {
-  var template = `
+	// if the button bg color is too bright
+	// use the inverted black 'x' icon to close
+	let closeImageSrc = "";
+	const obc = flc.options.openButtonColor.replace("#", "");
+	const r = parseInt(obc.slice(0, 2), 16);
+	const g = parseInt(obc.slice(2, 4), 16);
+	const b = parseInt(obc.slice(4, 6), 16);
+	if ( r >= 0xD0 && g >= 0xD0 && b >= 0xD0 ) {
+		closeImageSrc = flc.options.host + "/static/images/close-inverted.png";
+	} else {
+		closeImageSrc = flc.options.host + "/static/images/close.png";
+	}
+
+  	var template = `
 		<div id="forsta-chat-header" class="mdl-shadow--2dp">
 			<table>
 				<tr>
@@ -85,7 +98,7 @@ function getDesktopButton() {
 		</div>
 		<a class="forsta-open-chat-btn" id="forsta-chat-desktop">
 			<img id="chat-open" width="40" src="${flc.options.openButtonIconUrl}">
-			<img id="chat-close" width="25" src="https://chat.forsta.io/client/close.png">
+			<img id="chat-close" width="25" src="${closeImageSrc}">
 		</a>
 		`;
 
