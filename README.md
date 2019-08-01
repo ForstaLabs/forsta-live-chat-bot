@@ -5,7 +5,13 @@ The Forsta messaging-bot provides for for autonomous receipt, processing, storag
 transmission of messaging data in conjunction with the Forsta web messenger and iPhone/Android apps.
 Please fork it or one of our several projects based off of it!
 
+The live chat bot provides an easy way to configure a question set whose terminal questions send a connection request
+to a specified user or group of users. Once a terminal question is reached, the user can request a connection to a
+live chat operator. The request will be in the form of a librelay message with a "Connect" button and a complete history
+of the chat so far. Once the live chat operator clicks "Connect" they will be added to the existing thread so they can talk 
+to the user.
 
+The bot also records all incoming/outgoing messages for debugging purposes.
 
 Quick Start
 --------
