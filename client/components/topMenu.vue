@@ -68,22 +68,19 @@ a:hover{
     </div>
         <div>
             <sui-modal v-model="showingSignOutModal">
-                <sui-modal-header>Sign Out</sui-modal-header>
+                <sui-modal-header>Sign out?</sui-modal-header>
                 <sui-modal-content>
                     <sui-modal-description>
-                        <sui-header>Are you sure you want to sign out?</sui-header>
                         <p>Any unsaved changes may be lost.</p>
                     </sui-modal-description>
                 </sui-modal-content>
-                <sui-modal-actions style="padding:10px">
+                <sui-modal-actions>
                     <sui-button 
-                        class="yellow" 
-                        floated="left"
+                        class="black" 
                         @click="() => showingSignOutModal = false"
                         content="Cancel" />
                     <sui-button 
-                        floated="right" 
-                        class="green" 
+                        class="blue" 
                         @click="logout"
                         content="Sign Out" />
                 </sui-modal-actions>
