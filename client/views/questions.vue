@@ -200,30 +200,27 @@ div [class*="pull right"] {
 
         <div>
             <sui-modal v-model="showingSaveChangesModal">
-                <sui-modal-header>Save Changes</sui-modal-header>
-                <sui-modal-content>
-                    <sui-modal-description>
-                        <sui-header>Continue without saving changes?</sui-header>
-                        <p>Your changes have not been saved.</p>
-                    </sui-modal-description>
-                </sui-modal-content>
-                <sui-modal-actions style="padding:10px">
-                    <sui-button 
-                        class="yellow" 
-                        floated="left"
-                        @click="showingSaveChangesModal = false"
-                        content="Cancel" />
-                    <sui-button 
-                        class="red"
-                        @click="nextRoute()"
-                        content="Don't Save & Continue" />
-                    <sui-button 
-                        floated="right" 
-                        class="blue" 
-                        @click="saveAndContinue()"
-                        content="Save & Continue" />
-                </sui-modal-actions>
-            </sui-modal>
+              <sui-modal-header>Continue without saving changes?</sui-modal-header>
+              <sui-modal-content>
+                  <sui-modal-description>
+                      <p>Your changes have not been saved.</p>
+                  </sui-modal-description>
+              </sui-modal-content>
+              <sui-modal-actions style="padding:10px">
+                  <sui-button 
+                      class="black" 
+                      @click="showingSaveChangesModal = false"
+                      content="Cancel" />
+                  <sui-button 
+                      class="gray"
+                      @click="nextRoute()"
+                      content="Don't Save & Continue" />
+                  <sui-button 
+                      class="blue" 
+                      @click="saveAndContinue()"
+                      content="Save & Continue" />
+              </sui-modal-actions>
+          </sui-modal>
         </div>
     </div>
 </template>
