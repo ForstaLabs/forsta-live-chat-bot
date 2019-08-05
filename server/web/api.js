@@ -86,7 +86,9 @@ class OnboardAPIV1 extends APIHandler {
         super(options);
         this.router.get('/status/v1', this.asyncRoute(this.onStatusGet, false));
         this.router.get('/atlasauth/request/v1/:tag', this.asyncRoute(this.onRequestAtlasAuthentication, false));
-        this.router.post('/atlasauth/complete/v1/:tag', this.asyncRoute(this.onCompleteAtlasLoginAndOnboard, false));
+        this.router.post('/atlasauth/authenticate/v1/:tag', this.asyncRoute(this.onAtlasAuthenticate, false));
+        this.router.post('/atlasauth/complete/v1/', this.asyncRoute(this.onComplete, true));
+        this.onboarderClient = null;
     }
 
     async onStatusGet(req, res, next) {
@@ -114,7 +116,7 @@ class OnboardAPIV1 extends APIHandler {
         return;
     }
 
-    async onCompleteAtlasLoginAndOnboard(req, res) {
+    async onAtlasAuthenticate(req, res) {
         const tag = req.params.tag;
         if (!tag) {
             res.status(412).json({
@@ -139,16 +141,15 @@ class OnboardAPIV1 extends APIHandler {
             });
             return;
         }
-        let onboarderClient;
         try {
             if (type === 'sms') {
                 console.log('about to sms auth with', tag, value);
-                onboarderClient = await BotAtlasClient.authenticateViaCode(tag, value);
-                console.log('returned with', onboarderClient);
+                this.onboarderClient = await BotAtlasClient.authenticateViaCode(tag, value);
+                console.log('returned with', this.onboarderClient);
             } else if (type === 'password') {
                 console.log('about to password auth with', tag, value);
-                onboarderClient = await BotAtlasClient.authenticateViaPassword(tag, value);
-                console.log('returned with', onboarderClient);
+                this.onboarderClient = await BotAtlasClient.authenticateViaPassword(tag, value);
+                console.log('returned with', this.onboarderClient);
             } else if (type === 'totp') {
                 const otp = req.body.otp;
                 if (!otp) {
@@ -159,8 +160,8 @@ class OnboardAPIV1 extends APIHandler {
                     return;
                 }
                 console.log('about to password+totp auth with', tag, value, otp);
-                onboarderClient = await BotAtlasClient.authenticateViaPasswordOtp(tag, value, otp);
-                console.log('returned with', onboarderClient);
+                this.onboarderClient = await BotAtlasClient.authenticateViaPasswordOtp(tag, value, otp);
+                console.log('returned with', this.onboarderClient);
             } else {
                 res.status(412).json({
                     error: 'value_error',
@@ -175,8 +176,39 @@ class OnboardAPIV1 extends APIHandler {
             }
             return;
         }
+
+        const token = await genToken(await relay.storage.getState("onboardUser"));
+        res.status(200).json({ token });
+    }
+
+    async onComplete(req, res) {
+        console.log('hit onboard oncomplete ...');
+        const { first_name, last_name, tag_slug } = req.body;
+        if (!first_name) {
+            res.status(412).json({
+                error: 'missing_arg',
+                message: 'Missing URL param: first_name'
+            });
+            return;
+        }
+        if (!last_name) {
+            res.status(412).json({
+                error: 'missing_arg',
+                message: 'Missing URL param: last_name'
+            });
+            return;
+        }
+        if (!tag_slug) {
+            res.status(412).json({
+                error: 'missing_arg',
+                message: 'Missing URL param: tag_slug'
+            });
+            return;
+        }
         try {
-            await BotAtlasClient.onboard(onboarderClient);
+            console.log("onboarder client available for .onboard?");
+            console.log(this.onboarderClient ? "yes" : "no");
+            await BotAtlasClient.onboard(this.onboarderClient, req.body);
         } catch (e) {
             if (e.code === 403) {
                 res.status(403).json({non_field_errors: ['Insufficient permission. Need to be an administrator?']});
@@ -187,9 +219,10 @@ class OnboardAPIV1 extends APIHandler {
         }
         await this.server.bot.start(); // it could not have been running without a successful onboard
 
-        const token = await genToken(await relay.storage.getState("onboardUser"));
-        res.status(200).json({ token });
+        res.status(200).json({ok: true});
     }
+
+
 }
 
 class AuthenticationAPIV1 extends APIHandler {

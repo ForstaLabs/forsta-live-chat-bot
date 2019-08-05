@@ -1,6 +1,6 @@
 <template>
     <div>
-        <top-menu v-if="global.apiToken" />
+        <top-menu v-if="global.apiToken && global.onboardStatus == 'complete' " />
         <sui-grid>
             <sui-grid-row :columns="1" centered>
                 <sui-grid-column
@@ -33,8 +33,8 @@ module.exports = {
             util.fetch.call(this, '/api/onboard/status/v1')
             .then(result => { 
                 this.global.onboardStatus = result.theJson.status;
+                
                 if (this.global.onboardStatus !== 'complete') {
-                    this.global.apiToken = null;
                     this.$router.push({ name: 'welcome' });
                 }
             });

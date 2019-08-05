@@ -80,15 +80,13 @@ module.exports = {
             var type = this.type;
             var otp = this.otp;
             this.loading = true;
-            util.fetch.call(this, '/api/onboard/atlasauth/complete/v1/' + tag, { method: 'post', body: { value, type, otp }})
+            util.fetch.call(this, '/api/onboard/atlasauth/authenticate/v1/' + tag, { method: 'post', body: { value, type, otp }})
             .then(result => {
                 this.loading = false;
                 if (result.ok) {
                     const { token } = result.theJson;
                     this.global.apiToken = token;
-                    this.global.loginTag = 
-                    this.global.onboardStatus = 'complete';
-                    this.$router.push({ name: 'questions' });
+                    this.$router.push({ name: 'onboardComplete' });
                     return false;
                 } else {
                     this.error = util.mergeErrors(result.theJson) || 'Internal error, please try again.';
