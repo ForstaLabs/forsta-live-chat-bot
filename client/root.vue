@@ -30,7 +30,7 @@ module.exports = {
             util.fetch.call(this, '/api/auth/status/v1')
             .then(result => { this.global.passwordSet = result.ok; });
 
-            util.fetch.call(this, '/api/onboard/status/v1')
+            util.fetch.call(this, '/api/auth/status/v1')
             .then(result => { 
                 this.global.onboardStatus = result.theJson.status;
                 

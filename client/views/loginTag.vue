@@ -58,7 +58,7 @@ function setup() {
         }
     }
 
-    util.fetch.call(this, '/api/onboard/status/v1')
+    util.fetch.call(this, '/api/auth/status/v1')
     .then(result => { 
         this.global.onboardStatus = result.theJson.status;
         if (this.global.onboardStatus !== 'complete') {
@@ -89,14 +89,12 @@ function setup() {
 function requestAuth() {
     var tag = this.tag;
     this.loading = true;
-    util.fetch.call(this, '/api/auth/login/v1/' + tag)
+    util.fetch.call(this, '/api/auth/atlasauth/request/v1/' + tag)
     .then(result => {
         this.loading = false;
         if (result.ok) {
-            const { id } = result.theJson;
-            this.global.userId = id;
             this.global.loginTag = tag;
-            this.$router.push({ name: 'loginCode', query: this.$route.query });
+            this.$router.push({ name: 'loginAuth', params: { tag: this.tag, type: result.theJson.type }});
             return false;
         } else {
             util.addFormErrors('enter-tag', { tag: util.mergeErrors(result.theJson) });

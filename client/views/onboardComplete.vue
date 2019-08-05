@@ -75,7 +75,7 @@ module.exports = {
                     last_name: this.username.split(" ")[1] || ""
                 }
             };
-            util.fetch.call(this, '/api/onboard/atlasauth/complete/v1/', options)
+            util.fetch.call(this, '/api/auth/atlasauth/complete/v1/', options)
             .then(result => {
                 this.loading = false;
                 if (result.ok) {

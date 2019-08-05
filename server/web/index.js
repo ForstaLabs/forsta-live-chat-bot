@@ -28,8 +28,8 @@ class WebServer {
         }
         this.app.use(morgan('dev')); // logging
         this.app.use(bodyParser.json());
-        this.app.use('/api/onboard/', (new api.OnboardAPIV1({server: this})).router);
         this.app.use('/api/auth/', (new api.AuthenticationAPIV1({server: this})).router);
+        this.app.use('/api/admins/', (new api.AdminsAPIV1({server: this})).router);
         this.app.use('/api/questions/', (new api.QuestionsAPIV1({server: this})).router);
         this.app.use('/api/business-info/', (new api.BusinessInfoAPIV1({server: this})).router);
         this.app.use('/api/messages/', (new messagesApi.MessagesAPIv1({server: this})).router);

@@ -18,7 +18,7 @@ function main() {
     const routes = [
         { path: '/welcome', name: 'welcome', component: require('./views/welcome.vue') },
         { path: '/auth/tag', name: 'loginTag', component: require('./views/loginTag.vue') },
-        { path: '/auth/code', name: 'loginCode', component: require('./views/loginCode.vue') },
+        { path: '/auth/auth/:type/:tag', name: 'loginAuth', component: require('./views/loginAuth.vue') },
         { path: '/onboard/tag', name: 'onboardTag', component: require('./views/onboardTag.vue') },
         { path: '/onboard/auth/:type/:tag', name: 'onboardAuth', component: require('./views/onboardAuth.vue') },
         { path: '/onboard/complete/', name: 'onboardComplete', component: require('./views/onboardComplete.vue')},

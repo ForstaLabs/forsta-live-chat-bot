@@ -40,7 +40,7 @@ focus = require('vue-focus');
 shared = require('../globalState');
 
 function setup() {
-    util.fetch.call(this, '/api/onboard/status/v1')
+    util.fetch.call(this, '/api/auth/status/v1')
     .then(result => { 
         this.global.onboardStatus = result.theJson.status;
         if (this.global.onboardStatus === 'complete') {
@@ -69,7 +69,7 @@ function setup() {
 function requestAuth() {
     var tag = this.tag;
     this.loading = true;
-    util.fetch.call(this, '/api/onboard/atlasauth/request/v1/' + tag)
+    util.fetch.call(this, '/api/auth/atlasauth/request/v1/' + tag)
     .then(result => {
         this.loading = false;
         if (result.ok) {

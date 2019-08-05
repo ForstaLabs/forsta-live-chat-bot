@@ -80,7 +80,7 @@ class APIHandler {
 }
 
 
-class OnboardAPIV1 extends APIHandler {
+class AuthenticationAPIV1 extends APIHandler {
 
     constructor(options) {
         super(options);
@@ -182,7 +182,6 @@ class OnboardAPIV1 extends APIHandler {
     }
 
     async onComplete(req, res) {
-        console.log('hit onboard oncomplete ...');
         const { first_name, last_name, tag_slug } = req.body;
         if (!first_name) {
             res.status(412).json({
@@ -225,48 +224,12 @@ class OnboardAPIV1 extends APIHandler {
 
 }
 
-class AuthenticationAPIV1 extends APIHandler {
+class AdminsAPIV1 extends APIHandler {
 
     constructor(options) {
         super(options);
-        this.router.get('/login/v1/:tag', this.asyncRoute(this.onRequestLoginCode, false));
-        this.router.post('/login/v1', this.asyncRoute(this.onCompleteLogin, false));
-        this.router.get('/admins/v1', this.asyncRoute(this.onGetAdministrators));
-        this.router.post('/admins/v1', this.asyncRoute(this.onUpdateAdministrators));
-    }
-
-    async onRequestLoginCode(req, res) {
-        const tag = req.params.tag;
-        if (!tag) {
-            res.status(412).json({
-                error: 'missing_arg',
-                message: 'Missing URL param: tag'
-            });
-            return;
-        }
-        try {
-            const id = await this.server.bot.sendAuthCode(tag);
-            res.status(200).json({ id });
-            return;
-        } catch (e) {
-            res.status(e.statusCode || 500).json(e.info || { message: 'internal error'});
-            return;
-        }
-    }
-
-    async onCompleteLogin(req, res) {
-        const userId = req.body.id;
-        const code = req.body.code;
-
-        try {
-            await this.server.bot.validateAuthCode(userId, code);
-            const token = await genToken(userId);
-            res.status(200).json({ token });
-            return;
-        } catch (e) {
-            res.status(e.statusCode || 500).json(e.info || { message: 'internal error'});
-            return;
-        }
+        this.router.get('/v1', this.asyncRoute(this.onGetAdministrators));
+        this.router.post('/v1', this.asyncRoute(this.onUpdateAdministrators));
     }
 
     async onGetAdministrators(req, res) {
@@ -448,7 +411,7 @@ class TagsAPIV1 extends APIHandler {
 
 module.exports = {
     APIHandler,
-    OnboardAPIV1,
+    AdminsAPIV1,
     AuthenticationAPIV1,
     QuestionsAPIV1,
     BusinessInfoAPIV1,

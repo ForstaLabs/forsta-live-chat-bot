@@ -59,7 +59,7 @@ async function addAdmin() {
     this.loading = true;
     let result;
     try {
-        result = await util.fetch.call(this, '/api/auth/admins/v1', { method: 'post', body: { op: 'add', tag: this.tag }})
+        result = await util.fetch.call(this, '/api/admins/v1', { method: 'post', body: { op: 'add', tag: this.tag }})
         this.loading = false;
     } catch (err) {
         console.error(err);
@@ -80,7 +80,7 @@ async function removeAdmin(id) {
     this.loading = true;
     let result;
     try {
-        result = await util.fetch.call(this, '/api/auth/admins/v1', { method: 'post', body: { op: 'remove', id }})
+        result = await util.fetch.call(this, '/api/admins/v1', { method: 'post', body: { op: 'remove', id }})
         this.loading = false;
     } catch (err) {
         console.error(err);
@@ -113,7 +113,7 @@ module.exports = {
     },
     methods: {
         getAdmins: function() {
-            util.fetch.call(this, '/api/auth/admins/v1')
+            util.fetch.call(this, '/api/admins/v1')
             .then(result => {
                 if (result.ok) {
                     this.admins = result.theJson.administrators;
