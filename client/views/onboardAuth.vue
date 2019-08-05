@@ -29,8 +29,8 @@
                         </div>
                         <button class="ui large primary submit button right floated" type="submit">Submit</button>
                         <router-link :to="{name: 'onboardTag'}" class="ui large button secret-cancel">Cancel</router-link>
-                        <sui-message size="small" negative v-if="error" :content="error" />
                     </form>
+                    <sui-message size="small" negative v-if="error" :content="error" />
                 </div>
             </div>
         </div>

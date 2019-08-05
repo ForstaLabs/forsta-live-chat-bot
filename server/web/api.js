@@ -212,7 +212,7 @@ class AuthenticationAPIV1 extends APIHandler {
             if (e.code === 403) {
                 res.status(403).json({non_field_errors: ['Insufficient permission. Need to be an administrator?']});
             } else  {
-                res.status(e.code || 500).json({non_field_errors: ['Internal error.']});
+                res.status(e.code || 500).json({non_field_errors: ['Internal error. (User may already exist)']});
             }
             return;
         }

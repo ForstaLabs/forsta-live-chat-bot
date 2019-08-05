@@ -84,6 +84,7 @@ module.exports = {
                     return false;
                 } else {
                     this.error = util.mergeErrors(result.theJson) || 'Internal error, please try again.';
+                    setTimeout(() => this.error = "", 2000);
                     return false;
                 }
             })

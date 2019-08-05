@@ -43,6 +43,7 @@ class BotAtlasClient extends relay.AtlasClient {
             await relay.storage.putState("botUser", botUser.id);
             await relay.storage.putState("botUserAuthToken", result.token);
         } catch (e) {
+            console.log(e);
             console.error("error during creation of bot user", e);
             throw e;
         }
