@@ -22,7 +22,6 @@ function main() {
         { path: '/onboard/tag', name: 'onboardTag', component: require('./views/onboardTag.vue') },
         { path: '/onboard/auth/:type/:tag', name: 'onboardAuth', component: require('./views/onboardAuth.vue') },
         { path: '/onboard/complete/', name: 'onboardComplete', component: require('./views/onboardComplete.vue')},
-        { path: '/users', name: 'users', component: require('./views/users.vue') },
         { path: '/questions', name: 'questions', component: require('./views/questions.vue') },
         { path: '/settings', name: 'settings', component: require('./views/settings.vue') },
         { path: '/embed', name: 'embed', component: require('./views/embed.vue') },

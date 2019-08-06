@@ -28,7 +28,6 @@ div [class*="pull right"] {
     <div class="ui container left aligned">
         <sui-segment basic>
             <h2>
-                <img src="http://localhost:4096/static/images/forsta-logo.svg" height="50px" width="50px"/>
                 Bot Settings
             </h2>
         </sui-segment>
@@ -39,6 +38,7 @@ div [class*="pull right"] {
             </h3>
             <p>When the bot recieves messages outside these hours it 
                 will respond with the message you specify.</p>
+            <sui-divider style="margin-top:10px"/>
             <sui-grid>
                 <sui-grid-row flex>
                     <sui-grid-column :width="8">
@@ -80,6 +80,46 @@ div [class*="pull right"] {
             </sui-grid>
         </sui-segment>
 
+        <sui-segment>
+            <div class="ui grid">
+                <div class="ui nine wide column basic segment left aligned b1" 
+                    :class="{loading: loading}" 
+                    style="margin-top:-1em;">
+                    <h3>
+                        Authorized Users
+                    </h3>
+                    <p>These users will have permission to log in to this bot dashboard.</p>
+                    <sui-divider style="margin-top:10px" />
+                    <div class="ui list listgap">
+                        <div v-for="a in admins" :key="a.id" class="item">
+                            <a 
+                                v-if="admins.length > 1" 
+                                @click="removeAdmin(a.id)" 
+                                data-tooltip="remove this authorized user">
+                                <i class="large remove circle icon"></i>
+                            </a> 
+                            <span 
+                                v-else 
+                                data-tooltip="cannot remove last authorized user">
+                                <i style="color: lightgray;" class="large remove circle icon"></i>
+                            </span> 
+                            {{a.label}}
+                        </div>
+                    </div>
+                    <form class="ui large form enter-tag" @submit.prevent="addAdmin">
+                        <div class="field" :class="{error:!!tagError}">
+                            <div data-tooltip="add an authorized user" class="ui left icon action input">
+                                <i class="at icon"></i>
+                                <input type="text" v-model='tag' name="tag" placeholder="user:org" autocomplete="off">
+                                <button class="ui icon button" :disabled="!tag" :class="{primary:!!tag}"><i class="plus icon"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                    <div v-if="tagError" class="ui small error message">{{tagError}}</div>
+                </div>
+            </div>
+        </sui-segment>
+
         <div>
             <sui-modal v-model="showingSaveChangesModal">
                 <sui-modal-header>Continue without saving changes?</sui-modal-header>
@@ -112,19 +152,62 @@ div [class*="pull right"] {
 'use strict'
 const util = require('../util')
 const shared = require('../globalState')
+const REFRESH_POLL_RATE = 15000;
+
+async function addAdmin() {
+    this.loading = true;
+    let result;
+    try {
+        result = await util.fetch.call(this, '/api/admins/v1', { method: 'post', body: { op: 'add', tag: this.tag }})
+        this.loading = false;
+    } catch (err) {
+        console.error(err);
+        this.loading = false;
+        return false;
+    }
+    if (result.ok) {
+        const { administrators } = result.theJson;
+        this.admins = administrators;
+        this.tag = '';
+        this.tagError = '';
+    } else {
+        this.tagError = util.mergeErrors(result.theJson);
+    }
+}
+
+async function removeAdmin(id) {
+    this.loading = true;
+    let result;
+    try {
+        result = await util.fetch.call(this, '/api/admins/v1', { method: 'post', body: { op: 'remove', id }})
+        this.loading = false;
+    } catch (err) {
+        console.error(err);
+        this.loading = false;
+        return false;
+    }
+    if (result.ok) {
+        const { administrators } = result.theJson;
+        this.admins = administrators;
+    } else {
+        this.removeError = util.mergeErrors(result.theJson);
+    }
+}
 
 module.exports = {
-    mounted: function() {
+    mounted () {
         this.loadData();
+        this.getAdmins();
+        this.interval = setInterval(() => this.getAdmins(), REFRESH_POLL_RATE); 
     },
     methods: {
-        checkForChanges: function() {
+        checkForChanges () {
             if(this.changesMade) return;
             if(JSON.stringify(this.businessInfoData) !== this.businessInfoDataOriginal){
                 this.changesMade = true;
             }
         },
-        loadData: function() {
+        loadData () {
             util.fetch('/api/business-info/', {method:'get'})
             .then( res => {
                 this.businessInfoData = res.theJson;
@@ -143,11 +226,11 @@ module.exports = {
                 });
             });
         },
-        saveAndContinue: function() {
+        saveAndContinue () {
             this.saveData();
             this.nextRoute();
         },
-        saveData: function() {
+        saveData () {
             util.fetch('/api/business-info/', 
             {
                 method:'post', 
@@ -158,9 +241,23 @@ module.exports = {
             });
             this.businessInfoDataOriginal = JSON.stringify(this.businessInfoData);
             this.changesMade = false;
+        },
+        getAdmins () {
+            util.fetch.call(this, '/api/admins/v1')
+            .then(result => {
+                if (result.ok) {
+                    this.admins = result.theJson.administrators;
+                }
+            });
+        },
+        removeAdmin (id) {
+            removeAdmin.call(this, id);
+        },
+        addAdmin () {
+            addAdmin.call(this);
         }
     },
-    beforeRouteLeave: function(to, from, next){ 
+    beforeRouteLeave (to, from, next){ 
         if(this.changesMade){
             this.showingSaveChangesModal = true;
             this.nextRoute = next;
@@ -169,6 +266,9 @@ module.exports = {
             next();
         }
     },
+    beforeDestroy () {
+        clearInterval(this.interval);
+    },
     data: () => ({ 
         global: shared.state,
         businessInfoData: {},
@@ -176,18 +276,13 @@ module.exports = {
         changesMade: false,
         showingSaveChangesModal: false,
         nextRoute: null,
-        tags: [],
-        tagsForDropdown: [],
-        actions: [
-            {
-                text: 'Forward to Questions',
-                value: 'Forward to Questions'
-            },
-            {
-                text: 'Forward to Tag',
-                value: 'Forward to Tag'
-            }
-        ]
+        global: shared.state,
+        loading: false,
+        interval: null,
+        tag: '',
+        tagError: '',
+        removeError: '',
+        admins: [],
     }),
 }
 </script>

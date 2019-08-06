@@ -46,17 +46,14 @@ a:hover{
                         <div class="item" @click="goto('questions')">
                             <i class="comment icon tiny"></i> Questions 
                         </div>
-                        <div class="item" @click="goto('messageHistory')">
-                            <i class="archive icon tiny"></i> Message History 
-                        </div>
-                        <div class="item" @click="goto('users')">
-                            <i class="user icon tiny"></i> Users
-                        </div>
                         <div class="item" @click="goto('embed')">
                             <i class="code icon tiny"></i> Embed
                         </div>
                         <div class="item" @click="goto('settings')">
                             <i class="clock icon tiny"></i> Settings 
+                        </div>
+                        <div class="item" @click="goto('messageHistory')">
+                            <i class="archive icon tiny"></i> Message History 
                         </div>
                         <div class="item" @click="() => showingSignOutModal = true">
                             Sign Out
