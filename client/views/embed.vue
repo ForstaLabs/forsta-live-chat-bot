@@ -238,31 +238,26 @@ module.exports = {
         tag,
         host
       } = this.embedSettings;
-      return `<script type="text/javascript" src="${window.location.origin}/embed.js"><\/script>
-<script type="text/javascript">
-  window.onload = function() {
-    flc.options = {
-      title: "${title}",
-      subtitle: "${subtitle}",
-      formText: "${formText}",
-      headerLogoUrl: "${headerLogoUrl}",
-      headerBackgroundColor: "${headerBackgroundColor}",
-      headerFontColor: "${headerFontColor}",
-      buttonText: "${buttonText}",
-      buttonBackgroundColor: "${buttonBackgroundColor}",
-      buttonFontColor: "${buttonFontColor}",
-      openButtonIconUrl: "${openButtonIconUrl}",
-      openButtonTooltipText: "${openButtonTooltipText}",
-      openButtonColor: "${openButtonColor}",
-      allowCalling: "${allowCalling}",
-      forceScreenShare: "false",
-      token: "${token}",
-      tag: "${tag}",
-      host: "${host}"
-    };
-    flc.activate();
-  }
-<\/script>`;
+      let embedStr = `<link rel="stylesheet" type="text/css" href="${window.location.origin}/embed.css"/>
+<iframe class="live-chat-iframe" src="${window.location.origin}/embed.html
+?title=${encodeURIComponent(title)}
+&subtitle=${encodeURIComponent(subtitle)}
+&formText=${encodeURIComponent(formText)}
+&headerLogoUrl=${encodeURIComponent(headerLogoUrl)}
+&headerBackgroundColor=${encodeURIComponent(headerBackgroundColor)}
+&headerFontColor=${encodeURIComponent(headerFontColor)}
+&buttonText=${encodeURIComponent(buttonText)}
+&buttonBackgroundColor=${encodeURIComponent(buttonBackgroundColor)}
+&buttonFontColor=${encodeURIComponent(buttonFontColor)}
+&openButtonIconUrl=${encodeURIComponent(openButtonIconUrl)}
+&openButtonTooltipText=${encodeURIComponent(openButtonTooltipText)}
+&openButtonColor=${encodeURIComponent(openButtonColor)}
+&allowCalling=${encodeURIComponent(allowCalling)}
+&forceScreenShare=false
+&token=${encodeURIComponent(token)}
+"/>`;
+        embedStr = embedStr.replace(/[\n]/g, "");
+      return embedStr;
     }
   },
   methods: {

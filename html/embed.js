@@ -42,36 +42,55 @@ flc.initChat = initChat;
 ////////////////////////
 
 function activate() {
-  var styles = getStyles();
-  jQuery("body").append(`<style>${styles}</style>`);
+	var styles = getStyles();
+	jQuery("body").append(`<style>${styles}</style>`);
 
-  if (jQuery(".site-content") === 0) {
-    jQuery(".site-content").append('<div id="forsta-chat-container"></div>');
-  } else {
-    jQuery(document.body).append('<div id="forsta-chat-container"></div>');
-  }
-
-  flc.initChat();
+	if (jQuery(".site-content") === 0) {
+		jQuery(".site-content").append('<div id="forsta-chat-container"></div>');
+	} else {
+		jQuery(document.body).append('<div id="forsta-chat-container"></div>');
+	}
+  	flc.initChat();
 }
 
 function initChat() {
-  getDesktopButton();
-  addDesktopBtnListener();
-  addFormListener();
+	const urlParams = new URLSearchParams(window.location.search);
+	params = {
+		title: urlParams.get('title'),
+		subtitle: urlParams.get('subtitle'),
+		formText: urlParams.get('formText'),
+		headerLogoUrl: urlParams.get('headerLogoUrl'),
+		headerBackgroundColor: urlParams.get('headerBackgroundColor'),
+		headerFontColor: urlParams.get('headerFontColor'),
+		buttonText: urlParams.get('buttonText'),
+		buttonBackgroundColor: urlParams.get('buttonBackgroundColor'),
+		buttonFontColor: urlParams.get('buttonFontColor'),
+		openButtonIconUrl: urlParams.get('openButtonIconUrl'),
+		openButtonTooltipText: urlParams.get('openButtonTooltipText'),
+		openButtonColor: urlParams.get('openButtonColor'),
+		allowCalling: urlParams.get('allowCalling'),
+		forceScreenShare: urlParams.get('forceScreenShare'),
+		token: urlParams.get('token'),
+		tag: urlParams.get('tag'),
+		host: urlParams.get('host')
+	}
+	getDesktopButton();
+	addDesktopBtnListener();
+	addFormListener();
 }
 
 function getDesktopButton() {
 	// if the button bg color is too bright
 	// use the inverted black 'x' icon to close
 	let closeImageSrc = "";
-	const obc = flc.options.openButtonColor.replace("#", "");
+	const obc = params.openButtonColor.replace("#", "");
 	const r = parseInt(obc.slice(0, 2), 16);
 	const g = parseInt(obc.slice(2, 4), 16);
 	const b = parseInt(obc.slice(4, 6), 16);
 	if ( r >= 0xD0 && g >= 0xD0 && b >= 0xD0 ) {
-		closeImageSrc = flc.options.host + "/static/images/close-inverted.png";
+		closeImageSrc = params.host + "/static/images/close-inverted.png";
 	} else {
-		closeImageSrc = flc.options.host + "/static/images/close.png";
+		closeImageSrc = params.host + "/static/images/close.png";
 	}
 
 	var template = `
@@ -80,12 +99,12 @@ function getDesktopButton() {
 				<tr>
 					<td>
 						<img style="padding:15px" height="120" width="120" src="${
-			flc.options.headerLogoUrl
+			params.headerLogoUrl
 			}" />
 					</td>
 					<td style="padding-left:10px;padding-top:10px !important">
-						<p class="forsta-chat-header-title">${flc.options.title}</p>
-						<p class="forsta-chat-header-subtitle">${flc.options.subtitle}</p>
+						<p class="forsta-chat-header-title">${params.title}</p>
+						<p class="forsta-chat-header-subtitle">${params.subtitle}</p>
 					</td>
 				</tr>
 			</table>
@@ -94,10 +113,10 @@ function getDesktopButton() {
 		</div>
 						
 		<div class="mdl-tooltip mdl-tooltip--left mdl-tooltip--large" data-mdl-for="forsta-chat-desktop">
-			${flc.options.openButtonTooltipText}
+			${params.openButtonTooltipText}
 		</div>
 		<a class="forsta-open-chat-btn" id="forsta-chat-desktop">
-			<img id="chat-open" width="40" src="${flc.options.openButtonIconUrl}">
+			<img id="chat-open" width="40" src="${params.openButtonIconUrl}">
 			<img id="chat-close" width="25" src="${closeImageSrc}">
 		</a>
 		`;
@@ -105,7 +124,7 @@ function getDesktopButton() {
   var form = `
 	<form class="forsta-form" id="forsta-form">
 		<div style="margin-bottom:10px;margin-top:10px">
-			${flc.options.formText}
+			${params.formText}
 		</div>
 		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
 			<input id="first-name" class="mdl-textfield__input" type="text">
@@ -132,7 +151,7 @@ function getDesktopButton() {
 			type="submit" 
 			class="forsta-start-chat-button\
 				mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect">
-			<strong>${flc.options.buttonText}</strong>
+			<strong>${params.buttonText}</strong>
 		</button>
 	</form>
 `;
@@ -225,17 +244,17 @@ function addFormListener() {
 function getIframe(data) {
   var iframeSrc = `
 	https://app.forsta.io/@embed?
-	token=${flc.options.token}&
+	token=${params.token}&
 	first_name=${data.firstName}&
 	last_name=${data.lastName}&
 	email=${data.email}&
-	to=${flc.options.tag}&
+	to=${params.tag}&
 	title=Live Chat-${data.firstName}%20${data.lastName}
 	`;
-	if (flc.options.allowCalling === "true") {
+	if (params.allowCalling === "true") {
 		iframeSrc = `${iframeSrc}&allowCalling`;
 	}
-	if (flc.options.forceScreenShare === "true") {
+	if (params.forceScreenShare === "true") {
 		iframeSrc = `${iframeSrc}&forceScreenShare`;
 	}
 	
@@ -268,7 +287,7 @@ function getStyles() {
 			border-radius:0px 0px 10px 10px;
 		}
 		.forsta-open-chat-btn { 
-			background-color: ${flc.options.openButtonColor};
+			background-color: ${params.openButtonColor};
 			position: fixed;
 			bottom: 20px;
 			right: 20px;
@@ -281,8 +300,8 @@ function getStyles() {
 			text-align: center;
 		}
 		#forsta-chat-header {
-			background-color: ${flc.options.headerBackgroundColor};
-			color: ${flc.options.headerFontColor};
+			background-color: ${params.headerBackgroundColor};
+			color: ${params.headerFontColor};
 			position: fixed; 
 			bottom: 490px; 
 			right: 89px; 
@@ -321,14 +340,14 @@ function getStyles() {
 			transition-duration: .5s;
 		}
 		.forsta-chat-header-title{
-			color: ${flc.options.headerFontColor};
+			color: ${params.headerFontColor};
 			font-size: 2em;
 			font-weight: bold;
 			margin-bottom:5px !important;
 			margin-top:5px !important;
 		}
 		.forsta-chat-header-subtitle{
-			color: ${flc.options.headerFontColor};
+			color: ${params.headerFontColor};
 			font-size: 1.2em;
 			font-weight: bold;
 			margin-top:0px !important;
@@ -336,8 +355,8 @@ function getStyles() {
 		.forsta-start-chat-button{
 			width:80%;
 			font-size:1.2em;
-			color: ${flc.options.buttonFontColor};
-			background-color: ${flc.options.buttonBackgroundColor};
+			color: ${params.buttonFontColor};
+			background-color: ${params.buttonBackgroundColor};
 		}
 		`;
 }
