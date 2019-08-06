@@ -43,7 +43,7 @@
                     </sui-table-header-cell>
                 </sui-table-row>
             </sui-table-header>
-            <sui-table-body>
+            <sui-table-body style="max-height:500px; overflow-y:scroll;">
                 <sui-table-row v-if="messageHistory.length == 0">
                     <sui-table-cell>
                         0 Threads in Message History

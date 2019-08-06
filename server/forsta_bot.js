@@ -184,7 +184,9 @@ class ForstaBot {
         this.threadStatus[msg.threadId].waitingForResponse = false;
 
         if (response.action === "Forward to Tag") {
-            const forwardMessage = this.getForwardMessage(msg);
+            const ephemeralUser = users.filter(u => u.id === msg.sender.userId)[0];
+            const ephemeralUsername = ephemeralUser.first_name + " " + ephemeralUser.last_name;
+            const forwardMessage = this.getForwardMessage(msg, ephemeralUsername);
             const botTagId = users.filter(u => u.id === this.ourId)[0].tag.id;
             const forwardingDist = await this.resolveTags(`(<${response.actionOption}>+<${botTagId}>)`);
             if (!forwardingDist) {
@@ -217,19 +219,21 @@ class ForstaBot {
         return true;
     }
 
-    getForwardMessage(msg) {
+    getForwardMessage(msg, ephemeralUsername) {
         const responses = this.threadStatus[msg.threadId].responses;
-        let forwardMessage = `A live chat user is trying to connect. Here is their message history:<br><br>`;
+        //forward message
+        let fm = `<h5>A live chat user is trying to connect.</h5><br>`;
+        fm += `<strong>Name:</strong> ${ephemeralUsername}<br><br>`;
         responses.forEach(response => {
-            forwardMessage += 
-                `<strong>Prompt:</strong><br>`
+            fm += 
+                `<label>Chatbot:</label> `
                 + `${response.prompt}<br>`
-                + `<strong>Response:</strong><br>`
+                + `<label>Response:</label> `
                 + `${response.response}<br><br>`;
         });
-        forwardMessage += `<br /><hr width="100%" />`;
-        forwardMessage += `Click the "Connect" button to chat with this user.`;
-        return forwardMessage;
+        fm += `<hr width="100%" />`;
+        fm += `Click the "Connect" button to chat with this user.`;
+        return fm;
     }
 
     parseResponse(msg){

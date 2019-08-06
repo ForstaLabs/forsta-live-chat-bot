@@ -74,14 +74,14 @@ function getDesktopButton() {
 		closeImageSrc = flc.options.host + "/static/images/close.png";
 	}
 
-  	var template = `
+	var template = `
 		<div id="forsta-chat-header" class="mdl-shadow--2dp">
 			<table>
 				<tr>
 					<td>
 						<img style="padding:15px" height="120" width="120" src="${
-              flc.options.headerLogoUrl
-            }" />
+			flc.options.headerLogoUrl
+			}" />
 					</td>
 					<td style="padding-left:10px;padding-top:10px !important">
 						<p class="forsta-chat-header-title">${flc.options.title}</p>
@@ -139,7 +139,7 @@ function getDesktopButton() {
 
   jQuery("#forsta-chat-container").append(template);
   if (chatOpen && chatData.firstName && chatData.lastName && chatData.email) {
-    jQuery("#chat-open").hide();
+	jQuery("#chat-open").hide();
     jQuery("#forsta-chat").append(getIframe(chatData));
   } else if (chatOpen) {
     jQuery("#chat-open").hide();
