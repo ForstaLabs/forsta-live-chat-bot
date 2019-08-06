@@ -4,10 +4,10 @@
 <template>
     <div class="ui main text container" style="margin-top: 80px;">
         <div class="ui container center aligned">
-            <div class="ui basic segment">
-                <h1>
-                    <i class="large circular sign in icon"></i>
-                    Enter Forsta {{label}}
+            <div class="ui basic segment huge">
+                <h1 class="ui header">
+                    <i class="circular icon user"></i>
+                    Live Chat Bot Login
                 </h1>
             </div>
             <div class="ui centered grid">
