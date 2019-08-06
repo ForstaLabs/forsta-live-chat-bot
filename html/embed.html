@@ -251,15 +251,15 @@
             }
 
             function getIframe(data) {
-            var iframeSrc = `
-                https://app.forsta.io/@embed?
-                token=${params.token}&
-                first_name=${data.firstName}&
-                last_name=${data.lastName}&
-                email=${data.email}&
-                to=${params.tag}&
-                title=Live Chat-${data.firstName}%20${data.lastName}
-                `;
+            var iframeSrc = `https://app.forsta.io/@embed?
+token=${params.token}&
+first_name=${data.firstName}&
+last_name=${data.lastName}&
+email=${data.email}&
+to=${params.tag}&
+title=Live Chat-${data.firstName}%20${data.lastName}
+`;
+                iframeSrc = iframeSrc.replace(/\n/, "");
                 if (params.allowCalling === "true") {
                     iframeSrc = `${iframeSrc}&allowCalling`;
                 }

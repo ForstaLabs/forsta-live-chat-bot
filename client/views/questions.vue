@@ -91,7 +91,7 @@ div [class*="pull right"] {
                     </sui-grid-column>
                 </sui-grid-row>
 
-                <sui-grid-row v-if="question.type!=='Free Response'">
+                <sui-grid-row v-if="question.type==='Multiple Choice'">
                     <sui-grid-column>
                         <div v-for="response in question.responses" class="response-item">
                             <span class="label">Response Text</span>
@@ -179,6 +179,16 @@ div [class*="pull right"] {
                               v-model="question.responses[0].actionOption"
                               @input="updateTagData(question.responses[0])"/>
                         </span>
+                    </sui-grid-column>
+                </sui-grid-row>
+
+                <sui-grid-row
+                    class="left aligned"
+                    v-if="question.type==='End Question'">
+                    <sui-grid-column>
+                      <sui-segment basic>
+                        This will end the chat session.
+                      </sui-segment>
                     </sui-grid-column>
                 </sui-grid-row>
             </sui-grid>
@@ -390,6 +400,10 @@ module.exports = {
         {
           text: "Multiple Choice",
           value: "Multiple Choice"
+        },
+        {
+          text: "End Question",
+          value: "End Question"
         }
       ]
     };

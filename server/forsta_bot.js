@@ -100,6 +100,7 @@ class ForstaBot {
                 listening: false,
                 responses: [],
                 sentOOOMessage: false,
+                ended: false
             };
         }
         
@@ -108,6 +109,11 @@ class ForstaBot {
         if(this.threadStatus[threadId] && this.threadStatus[threadId].listening) {
             return;
         }
+
+        if (this.threadStatus[msg.threadId].ended ) {
+            this.sendMessage(dist, msg.threadId, "The session has ended");
+            return;
+        } 
 
         if(this.outOfOffice(businessInfo)){
             if(this.threadStatus[threadId] && !this.threadStatus[threadId].sentOOOMessage) {
@@ -214,6 +220,11 @@ class ForstaBot {
         else if(response.action === "Forward to Question") {
             let questionNumber = Number(response.actionOption.split(' ')[1]);
             this.threadStatus[msg.threadId].currentQuestion = this.threadStatus[msg.threadId].questions[questionNumber-1];
+            if(this.threadStatus[msg.threadId].currentQuestion.type == "End Question") {
+                this.sendMessage(dist, msg.threadId, this.threadStatus[msg.threadId].currentQuestion.prompt);
+                this.threadStatus[msg.threadId].ended = true;
+                return;
+            }
         }
 
         return true;

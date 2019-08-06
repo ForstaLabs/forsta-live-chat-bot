@@ -255,6 +255,8 @@ module.exports = {
 &allowCalling=${encodeURIComponent(allowCalling)}
 &forceScreenShare=false
 &token=${encodeURIComponent(token)}
+&tag=${encodeURIComponent(tag)}
+&host=${encodeURIComponent(host)}
 "/>`;
         embedStr = embedStr.replace(/[\n]/g, "");
       return embedStr;
