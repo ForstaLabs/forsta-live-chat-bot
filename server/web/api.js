@@ -228,8 +228,9 @@ class AdminsAPIV1 extends APIHandler {
 
     constructor(options) {
         super(options);
-        this.router.get('/v1', this.asyncRoute(this.onGetAdministrators));
-        this.router.post('/v1', this.asyncRoute(this.onUpdateAdministrators));
+        this.router.get('/v1', this.asyncRoute(this.onGetAdministrators, true));
+        this.router.post('/v1', this.asyncRoute(this.onUpdateAdministrators, true));
+        this.router.get('/v1/bot-user/', this.asyncRoute(this.onGetBotUser, true));
     }
 
     async onGetAdministrators(req, res) {
@@ -264,6 +265,11 @@ class AdminsAPIV1 extends APIHandler {
             res.status(e.statusCode || 500).json(e.info || { message: 'internal error'});
             return;
         }
+    }
+
+    async onGetBotUser(req, res) {
+        const botUser = this.server.bot.botUser;
+        res.status(200).json({ botUser });
     }
 }
 

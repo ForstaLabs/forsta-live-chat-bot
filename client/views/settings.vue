@@ -15,7 +15,7 @@ div [class*="pull right"] {
     margin-right:0.5em;
 }
 
-.label {
+label {
     color:#555;
     display: block;
     margin-bottom:3px;
@@ -34,50 +34,83 @@ div [class*="pull right"] {
 
         <sui-segment>
             <h3>
+                Bot User information
+            </h3>
+            <p>The bot is recieves, processes, and responds as this user.</p>
+            <sui-segment v-if="botUser">
+            <sui-grid>
+                <sui-grid-row flex>
+                    <sui-grid-column :width="2">
+                        <img style="border-radius:50%" v-if="botAvatarUrl" :src="botAvatarUrl" />
+                    </sui-grid-column>
+                    <sui-grid-column :width="6">
+                        <div>
+                            <label>Name: </label>{{ botUser.first_name + " "  + botUser.last_name }}
+                        </div>
+                        <div>
+                            <label>Tag: </label>{{ "@" + botUser.tag.slug + ":"  + botUser.org.slug }}
+                        </div>
+                    </sui-grid-column> 
+                    <sui-grid-column :width="6">
+                        <div>
+                            <label>Email: </label>{{ botUser.email }}
+                        </div>
+                        <div>
+                            <label>Phone: </label>{{ botUser.phone }}
+                        </div>
+                    </sui-grid-column>        
+                </sui-grid-row>
+            </sui-grid>
+            </sui-segment>
+        </sui-segment>
+
+        <sui-segment>
+            <h3>
                 In office hours
             </h3>
             <p>When the bot recieves messages outside these hours it 
                 will respond with the message you specify.</p>
-            <sui-divider style="margin-top:10px"/>
-            <sui-grid>
-                <sui-grid-row flex>
-                    <sui-grid-column :width="8">
-                        <span class="label">Open</span>
-                        <sui-input 
-                            format="HH:MM:AM"
-                            v-model="businessInfoData.open"
-                            type="time"
-                            @input="checkForChanges()"/>
-                    </sui-grid-column>
-                    <sui-grid-column :width="8">
-                        <span class="label">Close</span>
-                        <sui-input 
-                            format="HH:MM:AM"
-                            v-model="businessInfoData.close"
-                            type="time"
-                            @input="checkForChanges()"/>   
-                    </sui-grid-column>     
-                    <sui-grid-column :width="16"> 
-                        <span class="label">Message</span>                     
-                        <sui-input 
-                            :style="$mq | mq({
-                                smallScreen: 'width:90%',
-                                bigScreen: 'width:90%'})"
-                            v-model="businessInfoData.outOfOfficeMessage"
-                            @input="checkForChanges()"/>
-                    </sui-grid-column>              
-                </sui-grid-row>
-                <sui-grid-row v-if="changesMade">
-                    <sui-grid-column>
-                        <sui-button 
-                            class="ui button pull right" 
-                            primary
-                            @click="saveData()">
-                            Save Changes
-                        </sui-button>
-                    </sui-grid-column>
-                </sui-grid-row>
-            </sui-grid>
+            <sui-segment>
+                <sui-grid>
+                    <sui-grid-row flex>
+                        <sui-grid-column :width="8">
+                            <span class="label">Open</span>
+                            <sui-input 
+                                format="HH:MM:AM"
+                                v-model="businessInfoData.open"
+                                type="time"
+                                @input="checkForChanges()"/>
+                        </sui-grid-column>
+                        <sui-grid-column :width="8">
+                            <span class="label">Close</span>
+                            <sui-input 
+                                format="HH:MM:AM"
+                                v-model="businessInfoData.close"
+                                type="time"
+                                @input="checkForChanges()"/>   
+                        </sui-grid-column>     
+                        <sui-grid-column :width="16"> 
+                            <span class="label">Message</span>                     
+                            <sui-input 
+                                :style="$mq | mq({
+                                    smallScreen: 'width:90%',
+                                    bigScreen: 'width:90%'})"
+                                v-model="businessInfoData.outOfOfficeMessage"
+                                @input="checkForChanges()"/>
+                        </sui-grid-column>              
+                    </sui-grid-row>
+                    <sui-grid-row v-if="changesMade">
+                        <sui-grid-column>
+                            <sui-button 
+                                class="ui button pull right" 
+                                primary
+                                @click="saveData()">
+                                Save Changes
+                            </sui-button>
+                        </sui-grid-column>
+                    </sui-grid-row>
+                </sui-grid>
+            </sui-segment>
         </sui-segment>
 
         <sui-segment>
@@ -89,33 +122,34 @@ div [class*="pull right"] {
                         Authorized Users
                     </h3>
                     <p>These users will have permission to log in to this bot dashboard.</p>
-                    <sui-divider style="margin-top:10px" />
-                    <div class="ui list listgap">
-                        <div v-for="a in admins" :key="a.id" class="item">
-                            <a 
-                                v-if="admins.length > 1" 
-                                @click="removeAdmin(a.id)" 
-                                data-tooltip="remove this authorized user">
-                                <i class="large remove circle icon"></i>
-                            </a> 
-                            <span 
-                                v-else 
-                                data-tooltip="cannot remove last authorized user">
-                                <i style="color: lightgray;" class="large remove circle icon"></i>
-                            </span> 
-                            {{a.label}}
-                        </div>
-                    </div>
-                    <form class="ui large form enter-tag" @submit.prevent="addAdmin">
-                        <div class="field" :class="{error:!!tagError}">
-                            <div data-tooltip="add an authorized user" class="ui left icon action input">
-                                <i class="at icon"></i>
-                                <input type="text" v-model='tag' name="tag" placeholder="user:org" autocomplete="off">
-                                <button class="ui icon button" :disabled="!tag" :class="{primary:!!tag}"><i class="plus icon"></i></button>
+                    <sui-segment style="width:100%">
+                        <div class="ui list listgap">
+                            <div v-for="a in admins" :key="a.id" class="item">
+                                <a 
+                                    v-if="admins.length > 1" 
+                                    @click="removeAdmin(a.id)" 
+                                    data-tooltip="remove this authorized user">
+                                    <i class="large remove circle icon"></i>
+                                </a> 
+                                <span 
+                                    v-else 
+                                    data-tooltip="cannot remove last authorized user">
+                                    <i style="color: lightgray;" class="large remove circle icon"></i>
+                                </span> 
+                                {{a.label}}
                             </div>
                         </div>
-                    </form>
-                    <div v-if="tagError" class="ui small error message">{{tagError}}</div>
+                        <form class="ui large form enter-tag" @submit.prevent="addAdmin">
+                            <div class="field" :class="{error:!!tagError}">
+                                <div data-tooltip="add an authorized user" class="ui left icon action input">
+                                    <i class="at icon"></i>
+                                    <input type="text" v-model='tag' name="tag" placeholder="user:org" autocomplete="off">
+                                    <button class="ui icon button" :disabled="!tag" :class="{primary:!!tag}"><i class="plus icon"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                        <div v-if="tagError" class="ui small error message">{{tagError}}</div>
+                    </sui-segment>
                 </div>
             </div>
         </sui-segment>
@@ -208,23 +242,21 @@ module.exports = {
             }
         },
         loadData () {
-            util.fetch('/api/business-info/', {method:'get'})
+            util.fetch('/api/business-info/')
             .then( res => {
                 this.businessInfoData = res.theJson;
                 this.businessInfoDataOriginal = JSON.stringify(res.theJson);
             });
 
-
-            util.fetch.call(this, '/api/tags/', {method: 'get'})
-            .then(result => {
-                this.tags = result.theJson.tags;
-                this.tags.forEach( (tag, idx) => {
-                    this.tagsForDropdown.push({
-                        text: tag.slug,
-                        value: tag.id
-                    });
-                });
+            util.fetch('/api/admins/v1/bot-user/')
+            .then( res => {
+                this.botUser = res.theJson.botUser;
+                console.log(res);
+                const first = this.botUser.first_name.slice(0, 1).toUpperCase();
+                const last = this.botUser.last_name.slice(0, 1).toUpperCase();
+                this.botAvatarUrl = `https://atlas-dev.forsta.io/avatar/text/${first + last}`;
             });
+
         },
         saveAndContinue () {
             this.saveData();
@@ -283,6 +315,8 @@ module.exports = {
         tagError: '',
         removeError: '',
         admins: [],
+        botUser: {},
+        botAvatarUrl: ''
     }),
 }
 </script>
