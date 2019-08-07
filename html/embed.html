@@ -46,22 +46,8 @@
             flc.initChat = initChat;
 
             ////////////////////////
-
-            function activate() {
-                var styles = getStyles();
-                jQuery("body").append(`<style>${styles}</style>`);
-
-                if (jQuery(".site-content") === 0) {
-                    jQuery(".site-content").append('<div id="forsta-chat-container"></div>');
-                } else {
-                    jQuery(document.body).append('<div id="forsta-chat-container"></div>');
-                }
-
-                flc.initChat();
-            }
-
             let params = {};
-            function initChat() {
+            function activate() {
                 const urlParams = new URLSearchParams(window.location.search);
                 params = {
                     title: urlParams.get('title'),
@@ -83,6 +69,19 @@
                     host: urlParams.get('host')
                 }
                 console.log(params);
+                var styles = getStyles();
+                jQuery("body").append(`<style>${styles}</style>`);
+
+                if (jQuery(".site-content") === 0) {
+                    jQuery(".site-content").append('<div id="forsta-chat-container"></div>');
+                } else {
+                    jQuery(document.body).append('<div id="forsta-chat-container"></div>');
+                }
+
+                flc.initChat();
+            }
+            
+            function initChat() {
                 getDesktopButton();
                 addDesktopBtnListener();
                 addFormListener();
