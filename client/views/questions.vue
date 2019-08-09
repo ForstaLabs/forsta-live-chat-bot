@@ -86,7 +86,6 @@ div [class*="pull right"] {
                             selection
                             placeholder="Question Type"
                             :options="questionTypes"
-                            @input="checkForChanges()"
                             v-model="question.type" />
                     </sui-grid-column>
                 </sui-grid-row>
@@ -99,14 +98,13 @@ div [class*="pull right"] {
                                 style="width:100%"
                                 class="flexbox"
                                 v-model="response.text"
-                                :value="response.text"
-                                @input="checkForChanges()"/>                          
+                                :value="response.text" />
                             <span class="label">Action</span>
                             <sui-dropdown      
                                 selection
-                                :options="questionActions"
+                                :options="responseActions"
                                 v-model="response.action"
-                                @input="updateAction(response)"/>
+                                @input="value => updateResponseAction(value, response)"/>
                             <sui-icon
                                 name="arrow right"
                                 size="large"
@@ -131,7 +129,8 @@ div [class*="pull right"] {
                             </span>
                             <sui-dropdown
                               selection
-                              :options="colorPresets"   
+                              :options="colorPresets"
+                              style="min-width:100px !important"
                               :value="getColorPresetValue(response.color)"
                               @input="value => updateResponseColor(value, response)" />                               
                             <sui-input
@@ -258,6 +257,13 @@ module.exports = {
         return "Custom";
       }
     },
+    updateResponseAction (value, response) {
+      response.action = value;
+      this.checkForChanges();
+      if (value == "Forward to Tag") {
+        response.actionOption = this.tagsForDropdown[0].value;
+      }
+    },
     updateResponseColor (value, response) {
       response.color = value;
       this.checkForChanges();
@@ -376,7 +382,7 @@ module.exports = {
         response.actionOption.charAt(0) == "@"
           ? response.actionOption.slice(1, response.actionOption.length)
           : response.actionOption;
-      this.checkForChanges();c
+      this.checkForChanges();
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -399,7 +405,7 @@ module.exports = {
       nextRoute: null,
       tags: [],
       tagsForDropdown: [],
-      questionActions: [
+      responseActions: [
         {
           text: "Forward to Question",
           value: "Forward to Question"

@@ -290,7 +290,7 @@ class QuestionsAPIV1 extends APIHandler {
         this.router.post('/*', this.asyncRoute(this.onPost, false));
     }
 
-    async onGet(req, res){
+    async onGet(req, res) {
         let questions = await relay.storage.get('live-chat-bot', 'questions');
         if(!questions){
             questions = [
@@ -341,7 +341,7 @@ class BusinessInfoAPIV1 extends APIHandler {
         this.router.post('/*', this.asyncRoute(this.onPost, false));
     }
 
-    async onGet(req, res){
+    async onGet(req, res) {
         let businessInfoData = await relay.storage.get('live-chat-bot', 'business-info');
         if(!businessInfoData){
             businessInfoData = {
@@ -371,7 +371,7 @@ class EmbedSettingsAPI extends APIHandler {
         this.router.post('/*', this.asyncRoute(this.onPost, false));
     }
 
-    async onGet(req, res){
+    async onGet(req, res) {
         const liveChatBot = this.server.bot.botUser;
         const tag = `@${liveChatBot.tag.slug}:${liveChatBot.org.slug}`;
         const forstaLogoUrl = `http://${req.get('host')}/static/images/forsta-logo.svg`;
@@ -417,9 +417,10 @@ class TagsAPIV1 extends APIHandler {
         this.router.get('/*', this.asyncRoute(this.onGet, false));
     }
 
-    async onGet(req, res){
-        let tags = (await this.server.bot.atlas.fetch('/v1/tag-pick/')).results;
-        res.status(200).json({tags});
+    async onGet(req, res) {
+        let tags = (await this.server.bot.atlas.fetch('/v1/tag/'))
+        .results.filter(t => t.created_by != null);
+        res.status(200).json({ tags });
     }
 
 }
