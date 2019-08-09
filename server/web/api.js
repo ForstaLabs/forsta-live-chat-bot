@@ -305,7 +305,7 @@ class QuestionsAPIV1 extends APIHandler {
                             action: "Forward to Question",
                             actionOption: "Question 1",
                             distId: null,
-                            color: '#ffffff',
+                            color: '#0E6EB8',
                             editing: false
                         },
                         {
@@ -313,7 +313,7 @@ class QuestionsAPIV1 extends APIHandler {
                             action: "Forward to Question",
                             actionOption: "Question 1",
                             distId: null,
-                            color: '#ffffff',
+                            color: '#0E6EB8',
                             editing: false
                         }
                     ]
