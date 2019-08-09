@@ -15,7 +15,7 @@ The bot also records all incoming/outgoing messages for debugging purposes.
 
 Quick Start
 --------
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/ForstaLabs/live-chat-bot)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/ForstaLabs/forsta-live-chat-bot)
 
 
 Install Requirements
@@ -29,7 +29,7 @@ Install Requirements
 Running Locally
 --------
 ```
-git clone https://github.com/ForstaLabs/live-chat-bot.git
+git clone https://github.com/ForstaLabs/forsta-live-chat-bot.git
 cd live-chat-bot
 export RELAY_STORAGE_BACKING=postgres
 export USER=postgres
