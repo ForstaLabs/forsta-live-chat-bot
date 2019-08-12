@@ -6,6 +6,7 @@ const relay = require('librelay');
 const PGStore = require("./pgstore");
 const uuid4 = require('uuid/v4');
 const words = require("./authwords");
+const moment = require("moment");
 
 const AUTH_FAIL_THRESHOLD = 10;
 

@@ -7,7 +7,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ForstaLabs/live-chat-bot.git"
+    "url": "git+https://github.com/ForstaLabs/forsta-live-chat-bot.git"
   },
   "keywords": [
     "forsta",
@@ -16,9 +16,9 @@
   ],
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/ForstaLabs/live-chat-bot/issues"
+    "url": "https://github.com/ForstaLabs/forsta-live-chat-bot/issues"
   },
-  "homepage": "https://github.com/ForstaLabs/live-chat-bot#readme",
+  "homepage": "https://github.com/ForstaLabs/forsta-live-chat-bot#readme",
   "scripts": {
     "postinstall": "SKIP_PACKAGES=1 make",
     "start": "node server"

@@ -86,7 +86,6 @@ div [class*="pull right"] {
                             selection
                             placeholder="Question Type"
                             :options="questionTypes"
-                            @input="checkForChanges()"
                             v-model="question.type" />
                     </sui-grid-column>
                 </sui-grid-row>
@@ -99,14 +98,13 @@ div [class*="pull right"] {
                                 style="width:100%"
                                 class="flexbox"
                                 v-model="response.text"
-                                :value="response.text"
-                                @input="checkForChanges()"/>                          
+                                :value="response.text" />
                             <span class="label">Action</span>
                             <sui-dropdown      
                                 selection
-                                :options="questionActions"
+                                :options="responseActions"
                                 v-model="response.action"
-                                @input="updateAction(response)"/>
+                                @input="value => updateResponseAction(value, response)"/>
                             <sui-icon
                                 name="arrow right"
                                 size="large"
@@ -127,8 +125,14 @@ div [class*="pull right"] {
                                   :options="tagsForDropdown"   
                                   :value="response.actionOption"
                                   v-model="response.actionOption"
-                                  @input="updateTagData(question.responses[0])" />
-                            </span>                                
+                                  @input="updateTagData(response)" />
+                            </span>
+                            <sui-dropdown
+                              selection
+                              :options="colorPresets"
+                              style="min-width:100px !important"
+                              :value="getColorPresetValue(response.color)"
+                              @input="value => updateResponseColor(value, response)" />                               
                             <sui-input
                                 type="color"
                                 class="color-picker"
@@ -245,6 +249,25 @@ module.exports = {
     this.loadData();
   },
   methods: {
+    getColorPresetValue (hexColor) {
+      let presetColor = this.colorPresets.find(c => c.value == hexColor);
+      if (presetColor) {
+        return presetColor.value;
+      } else {
+        return "Custom";
+      }
+    },
+    updateResponseAction (value, response) {
+      response.action = value;
+      this.checkForChanges();
+      if (value == "Forward to Tag") {
+        response.actionOption = this.tagsForDropdown[0].value;
+      }
+    },
+    updateResponseColor (value, response) {
+      response.color = value;
+      this.checkForChanges();
+    },
     checkForChanges() {
       if (this.changesMade) return;
       if (JSON.stringify(this.questions) !== this.questionsOriginal) {
@@ -331,7 +354,7 @@ module.exports = {
         action: "Forward to Question",
         actionOption: `Question ${this.questions.indexOf(question) + 1}`,
         distId: null,
-        color: "#ffffff"
+        color: "#0E6EB8"
       });
       this.changesMade = true;
     },
@@ -359,7 +382,7 @@ module.exports = {
         response.actionOption.charAt(0) == "@"
           ? response.actionOption.slice(1, response.actionOption.length)
           : response.actionOption;
-      this.checkForChanges();c
+      this.checkForChanges();
     }
   },
   beforeRouteLeave(to, from, next) {
@@ -382,7 +405,7 @@ module.exports = {
       nextRoute: null,
       tags: [],
       tagsForDropdown: [],
-      questionActions: [
+      responseActions: [
         {
           text: "Forward to Question",
           value: "Forward to Question"
@@ -404,6 +427,64 @@ module.exports = {
         {
           text: "End Question",
           value: "End Question"
+        }
+      ],
+      colorPresets: [
+        {
+          text: "Red",
+          value: "#B03060"
+        },
+        {
+          text: "Orange",
+          value: "#FE9A76"
+        },
+        {
+          text: "Yellow",
+          value: "#FFD700"
+        },
+        {
+          text: "Olive",
+          value: "#32CD32"
+        },
+        {
+          text: "Green",
+          value: "#016936"
+        },
+        {
+          text: "Teal",
+          value: "#008080"
+        },
+        {
+          text: "Blue",
+          value: "#0E6EB8"
+        },
+        {
+          text: "Violet",
+          value: "#EE82EE"
+        },
+        {
+          text: "Purple",
+          value: "#B413EC"
+        },
+        {
+          text: "Pink",
+          value: "#FF1493"
+        },
+        {
+          text: "Brown",
+          value: "#A52A2A"
+        },
+        {
+          text: "Gray",
+          value: "#A0A0A0"
+        },
+        {
+          text: "Black",
+          value: "#000000"
+        },
+        {
+          text: "Custom", 
+          value: "Custom"
         }
       ]
     };
