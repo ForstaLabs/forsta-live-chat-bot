@@ -178,6 +178,9 @@ div [class*="pull right"] {
                         </span>
                         <span v-if="question.responses[0].action==='Forward to Tag'">
                             <sui-dropdown
+                              search
+                              selection
+                              placeholder="@user.tag"
                               :options="tagsForDropdown"   
                               :value="question.responses[0].actionOption"
                               v-model="question.responses[0].actionOption"
