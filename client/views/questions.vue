@@ -86,7 +86,8 @@ div [class*="pull right"] {
                             selection
                             placeholder="Question Type"
                             :options="questionTypes"
-                            v-model="question.type" />
+                            v-model="question.type"
+                            @input="checkForChanges()" />
                     </sui-grid-column>
                 </sui-grid-row>
 
@@ -144,6 +145,7 @@ div [class*="pull right"] {
                                 class="pull right"
                                 icon="trash alternate outline"
                                 style="vertical-align:middle"
+                                v-if="question.responses.length != 1"
                                 @click="deleteResponse(question, response)" />
                         </div>
                     <sui-button
@@ -164,7 +166,7 @@ div [class*="pull right"] {
                             selection
                             :options="responseActions"
                             v-model="question.responses[0].action"
-                            @input="updateAction(question.responses[0].action)"/>
+                            @input="value => updateResponseAction(value, question.responses[0])"/>
                         <sui-icon
                             name="arrow right"
                             size="large" />
@@ -182,8 +184,7 @@ div [class*="pull right"] {
                               selection
                               placeholder="@user.tag"
                               :options="tagsForDropdown"   
-                              :value="question.responses[0].actionOption"
-                              v-model="question.responses[0].actionOption"
+                              v-model="question.actionOption"
                               @input="updateTagData(question.responses[0])"/>
                         </span>
                     </sui-grid-column>
@@ -264,7 +265,10 @@ module.exports = {
       response.action = value;
       this.checkForChanges();
       if (value == "Forward to Tag") {
-        response.actionOption = this.tagsForDropdown[0].value;
+        response.actionOption = "@all";
+      }
+      if (value == "Forward to Question") {
+        response.actionOption = "Question 1";
       }
     },
     updateResponseColor (value, response) {
@@ -377,6 +381,9 @@ module.exports = {
       response.actionOption = "";
       if (response.action === "Forward to Question") {
         response.actionOption = "Question 1";
+      }
+      if (response.action === "Forward to Tag") {
+        response.actionOption = "@all";
       }
       this.checkForChanges();
     },
