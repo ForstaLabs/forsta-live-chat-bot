@@ -110,7 +110,7 @@ class ForstaBot {
             return;
         }
 
-        if (this.threadStatus[msg.threadId].ended ) {
+        if (this.threadStatus[msg.threadId] && this.threadStatus[msg.threadId].ended ) {
             this.sendMessage(dist, msg.threadId, "The session has ended");
             return;
         } 
