@@ -162,7 +162,7 @@ div [class*="pull right"] {
                         <span class="label">Action</span>
                         <sui-dropdown      
                             selection
-                            :options="questionActions"
+                            :options="responseActions"
                             v-model="question.responses[0].action"
                             @input="updateAction(question.responses[0].action)"/>
                         <sui-icon
