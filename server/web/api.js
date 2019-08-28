@@ -409,8 +409,9 @@ class TagsAPIV1 extends APIHandler {
     }
 
     async onGet(req, res) {
-        let tags = (await this.server.bot.atlas.fetch('/v1/tag/'))
-        .results.filter(t => t.created_by != null);
+        const tagPickUri = '/v1/tag-pick/?is-nametag=false&is-root=true';
+        let tags = (await this.server.bot.atlas.fetch(tagPickUri)).results;
+        console.log(tags);
         res.status(200).json({ tags });
     }
 
