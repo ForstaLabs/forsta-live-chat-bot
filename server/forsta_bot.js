@@ -200,7 +200,7 @@ class ForstaBot {
                 return;
             }
 
-            await this.sendMessage(dist, msg.threadId, `Forwarding your conversation to ${response.actionOption}`);
+            await this.sendMessage(dist, msg.threadId, response.forwardingText);
 
             let forwardingToDistMsg = await this.sendActionMessage(
                 forwardingDist, 
@@ -250,6 +250,7 @@ class ForstaBot {
     parseResponse(msg){
         const prompt = this.threadStatus[msg.threadId].currentQuestion.prompt;
         if(this.threadStatus[msg.threadId].currentQuestion.type === 'Free Response'){
+            console.log(msg);
             const responseText = msg.data.body[0].value;
             this.threadStatus[msg.threadId].responses.push({ 
                 prompt: prompt, response: responseText 

@@ -147,6 +147,15 @@ div [class*="pull right"] {
                                 style="vertical-align:middle"
                                 v-if="question.responses.length != 1"
                                 @click="deleteResponse(question, response)" />
+                            <span v-if="response.action==='Forward to Tag'">
+                              <span class="label">Forwarding Text</span>
+                              <sui-input
+                                label="Forwarding Message"
+                                style="width:100%; margin-top: 7px"
+                                v-model="response.forwardingText"
+                                @input="checkForChanges()"
+                              />
+                            </span>
                         </div>
                     <sui-button
                         style="margin-top:25px"
@@ -186,6 +195,12 @@ div [class*="pull right"] {
                               :options="tagsForDropdown"   
                               v-model="question.actionOption"
                               @input="updateTagData(question.responses[0])"/>
+                            <span class="label">Forwarding Text</span>
+                            <sui-input
+                              style="width:100%"
+                              v-model="question.responses[0].forwardingText"
+                              @input="checkForChanges()"
+                            />
                         </span>
                     </sui-grid-column>
                 </sui-grid-row>
@@ -195,7 +210,7 @@ div [class*="pull right"] {
                     v-if="question.type==='End Question'">
                     <sui-grid-column>
                       <sui-segment basic>
-                        This will end the chat session.
+                        This question will end the chat session.
                       </sui-segment>
                     </sui-grid-column>
                 </sui-grid-row>
@@ -265,7 +280,7 @@ module.exports = {
       response.action = value;
       this.checkForChanges();
       if (value == "Forward to Tag") {
-        response.actionOption = "@all";
+        response.actionOption = this.tagsForDropdown[0] && this.tagsForDropdown[0].value;
       }
       if (value == "Forward to Question") {
         response.actionOption = "Question 1";
@@ -337,14 +352,14 @@ module.exports = {
             text: "Yes",
             action: "Forward to Question",
             actionOption: "Question 1",
-            tagId: null,
+            forwardingText: "A member of our staff will connect with you shortly.",
             color: "#ffffff"
           },
           {
             text: "No",
             action: "Forward to Question",
             actionOption: "Question 1",
-            tagId: null,
+            forwardingText: "A member of our staff will connect with you shortly.",
             color: "#ffffff"
           }
         ]
@@ -360,7 +375,7 @@ module.exports = {
         text: "New Response",
         action: "Forward to Question",
         actionOption: `Question ${this.questions.indexOf(question) + 1}`,
-        distId: null,
+        forwardingText: "A member of our staff will connect with you shortly.",
         color: "#0E6EB8"
       });
       this.changesMade = true;
@@ -487,10 +502,6 @@ module.exports = {
         {
           text: "Gray",
           value: "#A0A0A0"
-        },
-        {
-          text: "Black",
-          value: "#000000"
         },
         {
           text: "Custom", 
