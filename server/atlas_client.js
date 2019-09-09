@@ -10,7 +10,7 @@ class BotAtlasClient extends relay.AtlasClient {
         return 'live chat bot';
     }
 
-    static async onboard(onboardClient, botUserInfo) {
+    static async onboard(onboardClient, botUserInfo, isExistingTag, existingTag) {
         let creatorUser = await onboardClient.fetch(
             "/v1/user/" + onboardClient.userId + "/"
         );
@@ -20,14 +20,18 @@ class BotAtlasClient extends relay.AtlasClient {
         await relay.storage.putState("onboardUser", creatorUser.id);
         let botUser = null;
         try {
-            botUser = await onboardClient.fetch("/v1/user/", {
-                method: "POST",
-                json: Object.assign({}, botUserInfo, { phone: creatorUser.phone, email: creatorUser.email, user_type: "BOT" })
-            });
+            if (!isExistingTag) {
+                botUser = await onboardClient.fetch("/v1/user/", {
+                    method: "POST",
+                    json: Object.assign({}, botUserInfo, { phone: creatorUser.phone, email: creatorUser.email, user_type: "BOT" })
+                });
+                console.info(
+                    `Created new bot user @${botUser.tag.slug}:${botUser.org.slug} <${botUser.id}>`
+                );
+            } else {
+                botUser = await onboardClient.fetch("/v1/user/" + existingTag.user.id + "/");
+            }
             console.log(botUser);
-            console.info(
-                `Created new bot user @${botUser.tag.slug}:${botUser.org.slug} <${botUser.id}>`
-            );
             //live chat bot requires admin priveledges to retrieve ephemeral token for embed
             const op = { method: "PATCH", json: { permissions: [ "org.administrator" ] } };
             await onboardClient.fetch(`/v1/user/${botUser.id}/`, op);

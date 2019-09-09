@@ -10,7 +10,7 @@
                     Create Bot User
                 </h1>
                 This bot will send and receive messages autonomously <br />
-                as a <strong>new</strong> Forsta user you create.
+                as a <strong>new or existing</strong> Forsta user you create.
                 <br /><br />
                 Please authenticate as an <strong>org administrator</strong> to
                 create this new user.
@@ -101,7 +101,7 @@ module.exports = {
             };
         }
     },
-    mounted: function () {
+    mounted () {
         setup.call(this)
     },
     methods: {

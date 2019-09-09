@@ -7,17 +7,17 @@ div [class*="pull right"] {
   float: right;
   margin-right: 0.25em;
 }
-a{
+a {
     color:#ddd;
 }
-a:hover{
+a:hover {
     color:#fff;
 }
-.hover-white:hover{
+.hover-white:hover {
     cursor: pointer;
     color:#fff;
 }
-.header{
+.header {
     color:white;
     display:inline;
     vertical-align:middle;

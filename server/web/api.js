@@ -191,7 +191,7 @@ class AuthenticationAPIV1 extends APIHandler {
     }
 
     async onComplete(req, res) {
-        const { first_name, tag_slug } = req.body;
+        const { first_name, tag_slug, is_existing_tag } = req.body;
         if (!first_name) {
             res.status(412).json({
                 error: 'missing_arg',
@@ -207,12 +207,20 @@ class AuthenticationAPIV1 extends APIHandler {
             return;
         }
         try {
-            await BotAtlasClient.onboard(this.onboarderClient, req.body);
+            const tagSearch = await this.onboarderClient.fetch("/v1/tag/?search=" + encodeURIComponent(tag_slug));
+            if (tagSearch.results) {
+                const tagAlreadyExists = tagSearch.results.find(r => r.slug == tag_slug);
+                if (!is_existing_tag && tagAlreadyExists) {
+                    res.status(409).json({ user_already_exists: [ `User ${tag_slug} already exists. Use them as the bot?` ]});
+                    return;
+                }
+            }
+            await BotAtlasClient.onboard(this.onboarderClient, req.body, is_existing_tag, tagSearch.results[0]);
         } catch (e) {
             if (e.code === 403) {
                 res.status(403).json({non_field_errors: ['Insufficient permission. Need to be an administrator?']});
             } else  {
-                res.status(e.code || 500).json({non_field_errors: ['Internal error. (User may already exist)']});
+                res.status(e.code || 500).json({non_field_errors: ['Internal error.']});
             }
             return;
         }
@@ -407,7 +415,6 @@ class TagsAPIV1 extends APIHandler {
     async onGet(req, res) {
         const tagPickUri = '/v1/tag-pick/?is-nametag=false&is-root=true';
         let tags = (await this.server.bot.atlas.fetch(tagPickUri)).results;
-        console.log(tags);
         res.status(200).json({ tags });
     }
 

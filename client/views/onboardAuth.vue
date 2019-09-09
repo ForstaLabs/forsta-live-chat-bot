@@ -10,7 +10,7 @@
                     Create Bot User
                 </h1>
                 This bot will send and receive messages autonomously <br />
-                as a <strong>new</strong> Forsta user you create.
+                as a <strong>new or existing</strong> Forsta user.
                 <br /><br />
             </div>
             <div class="ui centered grid">

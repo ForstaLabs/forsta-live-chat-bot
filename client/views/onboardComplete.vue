@@ -10,9 +10,8 @@
                     Create Bot User
                 </h1>
                 This bot will send and receive messages autonomously <br />
-                as a <strong>new</strong> Forsta user you create.
+                as a <strong>new or existing</strong> Forsta user.
                 <br /><br />
-                Enter the name you would like to use for this bot.
             </div>
             <div class="ui centered grid">
                 <div class="ui nine wide column basic segment left aligned t0 b1">
@@ -43,8 +42,21 @@
                                 <i class="lock icon"></i>
                             </div>
                         </div>
-                        <button class="ui large primary submit button right floated" type="submit">Submit</button>
-                        <sui-message size="small" negative v-if="error" :content="error" />
+                        <button
+                            v-if="!userExistsError" 
+                            class="ui large primary submit button right floated" 
+                            type="submit">
+                            Submit
+                        </button>
+                        <sui-message size="small" negative v-if="error" :content="error" dismissable @dismiss="error=''"/>
+                        <sui-message size="small" info v-if="userExistsError" :content="userExistsError" />
+                        <button
+                            v-if="userExistsError"
+                            dismissable
+                            @dismiss="userExistsError=''"
+                            class="ui large primary button submit centered">
+                            Use {{tag}} as the bot
+                        </button>
                     </form>
                 </div>
             </div>
@@ -59,10 +71,11 @@ focus = require('vue-focus');
 
 module.exports = {
     data: () => ({
-        tag: '', 
-        username: '', 
+        tag: "", 
+        username: "", 
         loading: false,
-        error: '',
+        error: "",
+        userExistsError: "",
         global: shared.state
     }),
     methods: {
@@ -77,7 +90,8 @@ module.exports = {
                 body: {
                     tag_slug: this.tag, 
                     first_name: this.username.split(" ")[0],
-                    last_name: (this.username.split(" ")[1] || "") + " " + extra
+                    last_name: (this.username.split(" ")[1] || "") + " " + extra,
+                    is_existing_tag: !!this.userExistsError
                 }
             };
             util.fetch.call(this, '/api/auth/atlasauth/complete/v1/', options)
@@ -88,8 +102,11 @@ module.exports = {
                     this.$router.push({ name: 'questions' });
                     return false;
                 } else {
+                    if (result.theJson.user_already_exists) {
+                        this.userExistsError = result.theJson.user_already_exists;
+                        return false;
+                    }
                     this.error = util.mergeErrors(result.theJson) || 'Internal error, please try again.';
-                    setTimeout(() => this.error = "", 2000);
                     return false;
                 }
             })
@@ -102,6 +119,7 @@ module.exports = {
     },
     watch: {
         username() {
+            this.userExistsError = "";
             const ua = this.username.split(" ");
             const first = ua[0].toLowerCase();
             const last = (ua[1] || "").toLowerCase();
