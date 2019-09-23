@@ -90,7 +90,8 @@ module.exports = {
             var type = this.type;
             var otp = this.otp;
             this.loading = true;
-            util.fetch.call(this, '/api/auth/atlasauth/authenticate/v1/' + tag, { method: 'post', body: { value, type, otp }})
+            const options = { method: 'post', body: { value, type, otp }};
+            util.fetch.call(this, '/api/auth/atlasauth/authenticate/v1/' + tag, options)
             .then(result => {
                 this.loading = false;
                 if (result.ok) {
