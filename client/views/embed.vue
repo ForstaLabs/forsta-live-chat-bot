@@ -113,12 +113,6 @@
             :value="embedSettings.openButtonIconUrl"
             @input="checkForChanges()"/>
 
-          <div class="label">Open Button Tooltip Text</div>
-          <sui-input
-            style="width:100%"
-            v-model="embedSettings.openButtonTooltipText"
-            @input="checkForChanges()"/>
-
           <div class="label">Open Button Color</div>
           <sui-input
             type="color"
@@ -133,7 +127,7 @@
           <br>
         </sui-grid-column>
         <sui-grid-column>
-          <div id="forsta-chat-header" class="mdl-shadow--2dp" :style="getHeaderStyling()">
+          <div id="forsta-chat-header" :style="getHeaderStyling()">
             <table>
               <tr>
                 <td>
@@ -250,7 +244,6 @@ module.exports = {
 &buttonBackgroundColor=${encodeURIComponent(buttonBackgroundColor)}
 &buttonFontColor=${encodeURIComponent(buttonFontColor)}
 &openButtonIconUrl=${encodeURIComponent(openButtonIconUrl)}
-&openButtonTooltipText=${encodeURIComponent(openButtonTooltipText)}
 &openButtonColor=${encodeURIComponent(openButtonColor)}
 &allowCalling=${encodeURIComponent(allowCalling)}
 &forceScreenShare=false
