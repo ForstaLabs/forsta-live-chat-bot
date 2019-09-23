@@ -52,26 +52,11 @@
             flc.initChat();
         }
 
-        function initChat() {
+        async function initChat() {
             const urlParams = new URLSearchParams(window.location.search);
-            params = {
-                title: urlParams.get('title'),
-                subtitle: urlParams.get('subtitle'),
-                formText: urlParams.get('formText'),
-                headerLogoUrl: urlParams.get('headerLogoUrl'),
-                headerBackgroundColor: urlParams.get('headerBackgroundColor'),
-                headerFontColor: urlParams.get('headerFontColor'),
-                buttonText: urlParams.get('buttonText'),
-                buttonBackgroundColor: urlParams.get('buttonBackgroundColor'),
-                buttonFontColor: urlParams.get('buttonFontColor'),
-                openButtonIconUrl: urlParams.get('openButtonIconUrl'),
-                openButtonColor: urlParams.get('openButtonColor'),
-                allowCalling: urlParams.get('allowCalling'),
-                forceScreenShare: urlParams.get('forceScreenShare'),
-                token: urlParams.get('token'),
-                tag: urlParams.get('tag'),
-                host: urlParams.get('host')
-            }
+            const response = await fetch(`${window.location.origin}/api/embedSettings/`)
+            params = await response.json()
+            
             var styles = getStyles();
             jQuery("body").append(`<style>${styles}</style>`);
 

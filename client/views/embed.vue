@@ -214,43 +214,8 @@ module.exports = {
   },
   computed: {
     embedCode() {
-      const {
-        title,
-        subtitle,
-        formText, 
-        headerLogoUrl,
-        headerBackgroundColor,
-        headerFontColor,
-        buttonText,
-        buttonBackgroundColor,
-        buttonFontColor,
-        openButtonIconUrl,
-        openButtonTooltipText,
-        openButtonColor,
-        allowCalling,
-        token,
-        tag,
-        host
-      } = this.embedSettings;
       let embedStr = `<link rel="stylesheet" type="text/css" href="${window.location.origin}/embed.css"/>
-<iframe class="live-chat-iframe" src="${window.location.origin}/embed.html
-?title=${encodeURIComponent(title)}
-&subtitle=${encodeURIComponent(subtitle)}
-&formText=${encodeURIComponent(formText)}
-&headerLogoUrl=${encodeURIComponent(headerLogoUrl)}
-&headerBackgroundColor=${encodeURIComponent(headerBackgroundColor)}
-&headerFontColor=${encodeURIComponent(headerFontColor)}
-&buttonText=${encodeURIComponent(buttonText)}
-&buttonBackgroundColor=${encodeURIComponent(buttonBackgroundColor)}
-&buttonFontColor=${encodeURIComponent(buttonFontColor)}
-&openButtonIconUrl=${encodeURIComponent(openButtonIconUrl)}
-&openButtonColor=${encodeURIComponent(openButtonColor)}
-&allowCalling=${encodeURIComponent(allowCalling)}
-&forceScreenShare=false
-&token=${encodeURIComponent(token)}
-&tag=${encodeURIComponent(tag)}
-&host=${encodeURIComponent(host)}
-"/>`;
+<iframe class="live-chat-iframe" src="${window.location.origin}/embed.html"/>`;
         embedStr = embedStr.replace(/[\n]/g, "");
       return embedStr;
     }
@@ -331,7 +296,7 @@ module.exports = {
   border-radius: 6px;
   border: 1px #ddd solid;
   width: 100%;
-  min-height: 250px;
+  min-height: 100px;
   font-family: monospace;
 }
 div [class*="pull left"] {
