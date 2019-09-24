@@ -42,6 +42,7 @@ class WebServer {
             res.send(`self.F = self.F || {}; F.env = ${JSON.stringify(jsenv)};\n`);
         });
         this.app.get('/embed.html*', (req, res) => res.sendFile('static/html/embed.html', {root}));
+        this.app.get('/embed-preview.html*', (req, res) => res.sendFile('static/html/embed-preview.html', {root}));
         this.app.get('/embed.js*', (req, res) => res.sendFile('static/html/embed.js', {root}));
         this.app.get('/embed.css', (req, res) => res.sendFile('static/html/embed.css', {root}));
         this.app.get('/*', (req, res) => res.sendFile('static/html/index.html', {root}));

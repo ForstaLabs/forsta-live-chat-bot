@@ -1,0 +1,32 @@
+<html>
+    <head>
+
+        <title>Forsta Live Chat Preview</title>
+        <link id="favicon" rel="shortcut icon" href="/static/images/favicon.png"/>
+    </head>
+    <body>
+        <!-- <link rel="stylesheet" type="text/css" href="http://localhost:4096/embed.css"/>
+        <iframe class="live-chat-iframe" src="http://localhost:4096/embed.html"/> -->
+        <script>
+        var stylesheet = document.createElement("link");
+        stylesheet.setAttribute("rel", "stylesheet");
+        stylesheet.setAttribute(
+            "href",
+            `${window.location.origin}/embed.css`
+        );
+        document.body.appendChild(stylesheet);
+
+        var iframe = document.createElement("iframe");
+        iframe.setAttribute(
+            "src",
+            `${window.location.origin}/embed.html`
+        );
+        iframe.setAttribute(
+            "style",
+            "height:90vh; width:90vw"
+        );
+        document.body.appendChild(iframe);
+        </script>
+    </body>
+
+</html>

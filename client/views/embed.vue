@@ -14,7 +14,8 @@
         <sui-grid-column>
           <sui-segment inverted color="blue" v-if="codeCopied">Copied!</sui-segment>
           <textarea id="codeTextarea" readonly="true" :value="embedCode" class="textarea" />
-          <sui-button style="width:100%" color="blue" @click="copyEmbedCode()">Copy</sui-button>
+          <sui-button style="width:100%" color="gray" @click="copyEmbedCode()">Copy</sui-button>
+          <sui-button style="width:100%;margin-top:15px" color="blue" @click="goToEmbedPreview()">Go To Live Preview</sui-button>
 
           <div class="label">Title</div>
           <sui-input
@@ -221,6 +222,9 @@ module.exports = {
     }
   },
   methods: {
+    goToEmbedPreview () {
+      window.location.replace(`${window.location.origin}/embed-preview.html`);
+    },
     copyEmbedCode () {
       document.getElementById("codeTextarea").select();
       document.execCommand('copy');
