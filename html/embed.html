@@ -22,7 +22,7 @@
         semanticUIStylesheetElement.setAttribute("rel", "stylesheet");
         semanticUIStylesheetElement.setAttribute(
             "href",
-            "https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css"
+            `${window.location.origin}/semantic-ui-custom.css`
         );
         document.body.appendChild(semanticUIStylesheetElement);
 
@@ -308,10 +308,10 @@
 			background-color: ${params.headerBackgroundColor};
 			color: ${params.headerFontColor};
 			position: fixed; 
-			bottom: 490px; 
-			right: 89px; 
+			bottom: 490px;
+			right: 90px; 
 			z-index: 1000;
-			width: 402px;
+			width: 400px;
 			height: 148px;
 			background-position: top center;
 			background-size: cover;
