@@ -413,7 +413,7 @@ class TagsAPIV1 extends APIHandler {
     }
 
     async onGet(req, res) {
-        const tagPickUri = '/v1/tag-pick/?is-nametag=false&is-root=true';
+        const tagPickUri = '/v1/tag-pick/?is-nametag=false';
         let tags = (await this.server.bot.atlas.fetch(tagPickUri)).results;
         res.status(200).json({ tags });
     }
